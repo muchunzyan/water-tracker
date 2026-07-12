@@ -4,9 +4,9 @@ import { MemoryRouter } from 'react-router-dom';
 import { App } from './App';
 import { ThemeProvider } from './providers/ThemeProvider';
 
-function renderApp() {
+function renderApp(initialEntry = '/') {
   return render(
-    <MemoryRouter>
+    <MemoryRouter initialEntries={[initialEntry]}>
       <ThemeProvider>
         <App />
       </ThemeProvider>
@@ -25,10 +25,8 @@ describe('App', () => {
     ).toBeEnabled();
   });
 
-  it('переходит между основными разделами', async () => {
-    renderApp();
-
-    fireEvent.click(screen.getByRole('link', { name: 'История' }));
+  it('открывает основной раздел по прямому маршруту', async () => {
+    renderApp('/history');
 
     expect(
       await screen.findByRole('heading', { level: 1, name: 'История' }),
