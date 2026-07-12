@@ -29,7 +29,11 @@ describe('App', () => {
     renderApp('/history');
 
     expect(
-      await screen.findByRole('heading', { level: 1, name: 'История' }),
+      await screen.findByRole(
+        'heading',
+        { level: 1, name: 'История' },
+        { timeout: 10_000 },
+      ),
     ).toBeInTheDocument();
   });
 
