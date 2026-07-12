@@ -1,0 +1,14 @@
+node_modules
+dist
+coverage
+playwright-report
+test-results
+lighthouse-reports
+.DS_Store
+*.local
+.env
+.env.*
+!.env.example
+
+# IDE-specific workspace state
+.idea

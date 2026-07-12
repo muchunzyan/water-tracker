@@ -1,0 +1,176 @@
+.layout {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: var(--space-6);
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--color-primary);
+  font-size: var(--font-size-xs);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin: var(--space-2) 0 0;
+  font-size: var(--font-size-2xl);
+  line-height: 1;
+  letter-spacing: -0.045em;
+}
+
+.description {
+  max-width: 58ch;
+  margin: var(--space-4) 0 0;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+.loading {
+  display: grid;
+  min-height: 220px;
+  place-items: center;
+}
+
+.drinkCard {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.drinkIcon {
+  display: grid;
+  width: 58px;
+  height: 58px;
+  place-items: center;
+  border-radius: var(--radius-md);
+  font-size: 1.75rem;
+}
+
+.drinkInfo,
+.drinkInfo h2,
+.drinkInfo p {
+  min-width: 0;
+  margin: 0;
+}
+
+.drinkTitleRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.drinkInfo h2 {
+  overflow: hidden;
+  font-size: var(--font-size-lg);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.drinkInfo > p {
+  margin-top: var(--space-1);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.badge {
+  padding: 3px 7px;
+  color: var(--color-primary);
+  border-radius: var(--radius-round);
+  background: var(--color-primary-soft);
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.actions {
+  display: flex;
+  grid-column: 1 / -1;
+  gap: var(--space-2);
+}
+
+.actions > * {
+  flex: 1;
+}
+
+.drinkInfo .error,
+.formError {
+  color: var(--color-danger);
+}
+
+.form {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+.selectField {
+  display: grid;
+  gap: var(--space-2);
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+}
+
+.selectField select {
+  width: 100%;
+  min-height: var(--tap-target);
+  padding: 0 var(--space-4);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-solid);
+}
+
+.colorInput {
+  padding: 5px;
+}
+
+.formError {
+  margin: 0;
+  font-size: var(--font-size-sm);
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .header {
+    display: grid;
+  }
+
+  .header > :last-child {
+    width: 100%;
+  }
+
+  .formRow {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,82 @@
+:root {
+  color-scheme: light;
+
+  --color-aqua-50: #eefbf9;
+  --color-aqua-100: #d5f5f0;
+  --color-aqua-300: #73ddd0;
+  --color-aqua-500: #18b8aa;
+  --color-aqua-600: #07968d;
+  --color-aqua-700: #087872;
+  --color-ink-950: #142f3d;
+  --color-ink-700: #3e5c69;
+  --color-ink-500: #6e8791;
+  --color-coral-400: #ff8d75;
+  --color-yellow-300: #ffd976;
+  --color-white: #ffffff;
+  --color-danger: #d84949;
+
+  --color-background: #e9f8f5;
+  --color-background-accent: #d8f4ef;
+  --color-surface: rgb(255 255 255 / 88%);
+  --color-surface-solid: #ffffff;
+  --color-surface-muted: #f3faf8;
+  --color-text: var(--color-ink-950);
+  --color-text-muted: var(--color-ink-700);
+  --color-text-subtle: var(--color-ink-500);
+  --color-primary: var(--color-aqua-600);
+  --color-primary-hover: var(--color-aqua-700);
+  --color-primary-soft: var(--color-aqua-100);
+  --color-border: rgb(20 47 61 / 10%);
+  --color-overlay: rgb(9 29 39 / 42%);
+  --color-focus: #087fdd;
+
+  --font-family:
+    Inter, ui-rounded, 'SF Pro Rounded', 'SF Pro Display', system-ui, sans-serif;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.5rem;
+  --font-size-2xl: clamp(2rem, 7vw, 3.25rem);
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  --radius-round: 999px;
+
+  --shadow-card: 0 18px 50px rgb(18 62 84 / 10%);
+  --shadow-floating: 0 18px 45px rgb(18 62 84 / 22%);
+  --transition-fast: 160ms ease;
+  --content-width: 1120px;
+  --tap-target: 48px;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --color-background: #0c2029;
+  --color-background-accent: #11333a;
+  --color-surface: rgb(23 50 60 / 88%);
+  --color-surface-solid: #17323c;
+  --color-surface-muted: #1c3a44;
+  --color-text: #f1fbfa;
+  --color-text-muted: #b8cfce;
+  --color-text-subtle: #8da9aa;
+  --color-primary: #55d7c9;
+  --color-primary-hover: #78e4d8;
+  --color-primary-soft: #204c4c;
+  --color-border: rgb(222 255 250 / 10%);
+  --color-overlay: rgb(2 12 17 / 68%);
+  --color-focus: #7cc9ff;
+  --shadow-card: 0 18px 50px rgb(0 0 0 / 18%);
+  --shadow-floating: 0 18px 45px rgb(0 0 0 / 38%);
+}
