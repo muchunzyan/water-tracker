@@ -35,11 +35,21 @@ describe('backup', () => {
       createdAt: now,
       updatedAt: now,
     });
-    await settings.save({ version: 1, dailyGoalMl: 2_500, theme: 'dark' });
+    await settings.save({
+      version: 1,
+      dailyGoalMl: 2_500,
+      theme: 'dark',
+      onboardingCompleted: true,
+    });
     const backup = await createBackup(database);
 
     await database.drinks.delete('custom-backup');
-    await settings.save({ version: 1, dailyGoalMl: 1_000, theme: 'light' });
+    await settings.save({
+      version: 1,
+      dailyGoalMl: 1_000,
+      theme: 'light',
+      onboardingCompleted: true,
+    });
     await replaceFromBackup(backup, database);
 
     expect(await database.drinks.get('custom-backup')).toMatchObject({

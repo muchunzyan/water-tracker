@@ -22,15 +22,28 @@ vi.mock('../../data/repositories', () => ({
 describe('DrinksPage', () => {
   beforeEach(() => {
     save.mockClear();
+    window.localStorage.clear();
   });
 
-  it('показывает встроенные напитки без действий изменения', () => {
+  it('позволяет изменять встроенные напитки', () => {
     render(<DrinksPage />);
 
     expect(screen.getByRole('heading', { name: 'Вода' })).toBeInTheDocument();
-    expect(
-      screen.queryByRole('button', { name: 'Изменить' }),
-    ).not.toBeInTheDocument();
+    expect(screen.getAllByRole('button', { name: 'Изменить' })).toHaveLength(
+      BUILTIN_DRINKS.length,
+    );
+  });
+
+  it('сортирует напитки по гидратации', () => {
+    render(<DrinksPage />);
+
+    fireEvent.change(
+      screen.getByRole('combobox', { name: 'Сортировка напитков' }),
+      { target: { value: 'hydration-asc' } },
+    );
+
+    const headings = screen.getAllByRole('heading', { level: 2 });
+    expect(headings[0]).toHaveTextContent('Крепкий алкоголь');
   });
 
   it('создаёт пользовательский напиток через форму', async () => {

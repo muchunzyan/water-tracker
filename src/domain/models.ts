@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 export const THEME_PREFERENCES = ['system', 'light', 'dark'] as const;
+export const ACTIVITY_LEVELS = ['low', 'moderate', 'high'] as const;
 export const DRINK_ICONS = [
   'water',
   'tea',
@@ -59,10 +60,18 @@ export const hydrationEntrySchema = z
     }
   });
 
+export const hydrationProfileSchema = z.object({
+  heightCm: z.number().int().min(120).max(230),
+  weightKg: z.number().min(30).max(300),
+  activityLevel: z.enum(ACTIVITY_LEVELS),
+});
+
 export const settingsSchema = z.object({
   version: z.literal(1),
   dailyGoalMl: z.number().int().min(250).max(10_000),
   theme: z.enum(THEME_PREFERENCES),
+  onboardingCompleted: z.boolean().default(false),
+  hydrationProfile: hydrationProfileSchema.optional(),
 });
 
 export const backupSchema = z.object({
@@ -75,6 +84,8 @@ export const backupSchema = z.object({
 
 export type DrinkIcon = (typeof DRINK_ICONS)[number];
 export type ThemePreference = (typeof THEME_PREFERENCES)[number];
+export type ActivityLevel = (typeof ACTIVITY_LEVELS)[number];
+export type HydrationProfile = z.infer<typeof hydrationProfileSchema>;
 export type DrinkSnapshot = z.infer<typeof drinkSnapshotSchema>;
 export type Drink = z.infer<typeof drinkSchema>;
 export type HydrationEntry = z.infer<typeof hydrationEntrySchema>;

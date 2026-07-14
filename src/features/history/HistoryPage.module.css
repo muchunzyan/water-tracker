@@ -109,7 +109,6 @@
   right: 0;
   bottom: 0;
   left: 0;
-  min-height: 3px;
   border-radius: var(--radius-round);
   background: var(--color-primary);
 }
@@ -172,6 +171,12 @@
 .entryCard h3,
 .entryCard p {
   margin: 0;
+}
+
+.entryCard h3 {
+  font-size: var(--font-size-md);
+  font-weight: 700;
+  line-height: 1.25;
 }
 
 .entryCard p {

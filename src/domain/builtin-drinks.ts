@@ -1,8 +1,9 @@
 import type { Drink } from './models';
 
 const BUILTIN_TIMESTAMP = '2026-07-11T00:00:00.000Z';
+const CATALOG_V2_TIMESTAMP = '2026-07-14T00:00:00.000Z';
 
-export const BUILTIN_DRINKS: readonly Drink[] = [
+const ORIGINAL_BUILTIN_DRINKS: readonly Drink[] = [
   {
     id: 'builtin-water',
     name: 'Вода',
@@ -69,4 +70,95 @@ export const BUILTIN_DRINKS: readonly Drink[] = [
     createdAt: BUILTIN_TIMESTAMP,
     updatedAt: BUILTIN_TIMESTAMP,
   },
+];
+
+function builtin(
+  id: string,
+  name: string,
+  hydrationPercent: number,
+  standardVolumeMl: number,
+  color: string,
+  icon: Drink['icon'],
+): Drink {
+  return {
+    id: `builtin-${id}`,
+    name,
+    hydrationPercent,
+    standardVolumeMl,
+    color,
+    icon,
+    isBuiltin: true,
+    createdAt: CATALOG_V2_TIMESTAMP,
+    updatedAt: CATALOG_V2_TIMESTAMP,
+  };
+}
+
+export const NEW_BUILTIN_DRINKS_V2: readonly Drink[] = [
+  builtin('sparkling-water', 'Газированная вода', 100, 250, '#62C9D8', 'water'),
+  builtin('mineral-water', 'Минеральная вода', 100, 250, '#55B8CF', 'water'),
+  builtin(
+    'electrolyte-water',
+    'Вода с электролитами',
+    100,
+    500,
+    '#35B9A9',
+    'water',
+  ),
+  builtin('coconut-water', 'Кокосовая вода', 95, 250, '#B6C76A', 'juice'),
+  builtin('sports-drink', 'Спортивный напиток', 95, 500, '#5FC6A8', 'custom'),
+  builtin('black-tea', 'Чёрный чай', 95, 250, '#B58A55', 'tea'),
+  builtin('green-tea', 'Зелёный чай', 95, 250, '#8EBE63', 'tea'),
+  builtin('herbal-tea', 'Травяной чай', 98, 250, '#70B77E', 'tea'),
+  builtin('iced-tea', 'Холодный чай', 90, 330, '#C39B55', 'tea'),
+  builtin('matcha', 'Матча', 90, 250, '#80AD55', 'tea'),
+  builtin('black-coffee', 'Чёрный кофе', 90, 200, '#76513E', 'coffee'),
+  builtin('espresso', 'Эспрессо', 90, 60, '#684536', 'coffee'),
+  builtin('decaf-coffee', 'Кофе без кофеина', 95, 200, '#92705A', 'coffee'),
+  builtin('latte', 'Латте', 90, 300, '#B8906E', 'coffee'),
+  builtin('cappuccino', 'Капучино', 90, 200, '#A77A5A', 'coffee'),
+  builtin('whole-milk', 'Цельное молоко', 95, 250, '#AFC9D3', 'milk'),
+  builtin('skim-milk', 'Обезжиренное молоко', 95, 250, '#C0D8DF', 'milk'),
+  builtin('plant-milk', 'Растительное молоко', 90, 250, '#D2C39D', 'milk'),
+  builtin('chocolate-milk', 'Шоколадное молоко', 90, 250, '#A9785D', 'milk'),
+  builtin('kefir', 'Кефир', 90, 250, '#BFD6D8', 'milk'),
+  builtin('ayran', 'Айран', 95, 250, '#B4D4DA', 'milk'),
+  builtin('orange-juice', 'Апельсиновый сок', 90, 200, '#F29A4A', 'juice'),
+  builtin('apple-juice', 'Яблочный сок', 88, 200, '#E0B74F', 'juice'),
+  builtin('tomato-juice', 'Томатный сок', 94, 200, '#D9684C', 'juice'),
+  builtin('smoothie', 'Смузи', 80, 300, '#D46F91', 'juice'),
+  builtin('fruit-drink', 'Морс', 90, 250, '#C85A78', 'juice'),
+  builtin('compote', 'Компот', 90, 250, '#C97B67', 'juice'),
+  builtin('diet-soda', 'Газировка без сахара', 95, 330, '#8F9BE8', 'soda'),
+  builtin('energy-drink', 'Энергетический напиток', 85, 250, '#DCB645', 'soda'),
+  builtin('lemonade', 'Лимонад', 90, 300, '#E2C54F', 'soda'),
+  builtin('kombucha', 'Комбуча', 90, 250, '#C58A54', 'tea'),
+  builtin('kvass', 'Квас', 85, 330, '#9B6E4B', 'custom'),
+  builtin('broth', 'Бульон', 95, 250, '#D2A85D', 'custom'),
+  builtin('cocoa', 'Какао', 85, 250, '#9A684F', 'coffee'),
+  builtin('hot-chocolate', 'Горячий шоколад', 85, 250, '#895541', 'coffee'),
+  builtin(
+    'protein-shake',
+    'Протеиновый коктейль',
+    85,
+    350,
+    '#A98CB7',
+    'custom',
+  ),
+  builtin('milkshake', 'Молочный коктейль', 80, 350, '#D79DB5', 'milk'),
+  builtin(
+    'non-alcoholic-beer',
+    'Безалкогольное пиво',
+    90,
+    500,
+    '#D8AA4A',
+    'custom',
+  ),
+  builtin('beer', 'Пиво', 80, 500, '#C69135', 'custom'),
+  builtin('wine', 'Вино', 70, 150, '#A34E67', 'custom'),
+  builtin('spirits', 'Крепкий алкоголь', 0, 50, '#9A9FA8', 'custom'),
+];
+
+export const BUILTIN_DRINKS: readonly Drink[] = [
+  ...ORIGINAL_BUILTIN_DRINKS,
+  ...NEW_BUILTIN_DRINKS_V2,
 ];

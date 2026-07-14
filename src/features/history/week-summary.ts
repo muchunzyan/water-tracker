@@ -1,6 +1,7 @@
 import { addDays, isSameDay, startOfDay } from 'date-fns';
 
 import type { HydrationEntry } from '../../domain/models';
+import { calculateProgressPercent } from '../../domain/progress';
 
 export interface DaySummary {
   date: Date;
@@ -27,7 +28,7 @@ export function buildWeekSummary(
     return {
       date,
       effectiveHydrationMl,
-      progress: Math.round((effectiveHydrationMl / dailyGoalMl) * 100),
+      progress: calculateProgressPercent(effectiveHydrationMl, dailyGoalMl),
       volumeMl: dayEntries.reduce((sum, entry) => sum + entry.volumeMl, 0),
     };
   });

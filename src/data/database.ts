@@ -1,12 +1,16 @@
 import Dexie, { type EntityTable } from 'dexie';
 
-import { BUILTIN_DRINKS } from '../domain/builtin-drinks';
+import {
+  BUILTIN_DRINKS,
+  NEW_BUILTIN_DRINKS_V2,
+} from '../domain/builtin-drinks';
 import type { Drink, HydrationEntry, Settings } from '../domain/models';
 
 export const DEFAULT_SETTINGS: Settings = {
   version: 1,
   dailyGoalMl: 2_000,
   theme: 'system',
+  onboardingCompleted: false,
 };
 
 interface StoredSettings extends Settings {
@@ -26,6 +30,19 @@ export class WaterTrackerDatabase extends Dexie {
       entries: 'id, drinkId, consumedAt, createdAt',
       settings: 'id',
     });
+
+    this.version(2)
+      .stores({
+        drinks: 'id, isBuiltin, name, updatedAt',
+        entries: 'id, drinkId, consumedAt, createdAt',
+        settings: 'id',
+      })
+      .upgrade(async (transaction) => {
+        const drinks = transaction.table<Drink, string>('drinks');
+        for (const drink of NEW_BUILTIN_DRINKS_V2) {
+          if (!(await drinks.get(drink.id))) await drinks.add(drink);
+        }
+      });
 
     this.on('populate', async () => {
       await this.drinks.bulkAdd([...BUILTIN_DRINKS]);

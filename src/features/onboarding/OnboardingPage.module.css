@@ -1,0 +1,143 @@
+.page {
+  display: grid;
+  width: min(100% - 32px, 760px);
+  min-height: 100svh;
+  margin: 0 auto;
+  padding: max(var(--space-6), env(safe-area-inset-top)) 0
+    max(var(--space-6), env(safe-area-inset-bottom));
+  align-content: center;
+  gap: var(--space-5);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.brand > span {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  color: var(--color-white);
+  border-radius: var(--radius-sm);
+  background: var(--color-primary);
+  font-weight: 800;
+}
+
+.card,
+.card form {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--color-primary);
+  font-size: var(--font-size-xs);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.card h1 {
+  margin: var(--space-2) 0 0;
+  font-size: var(--font-size-2xl);
+  line-height: 1.05;
+}
+
+.description,
+.disclaimer {
+  color: var(--color-text-muted);
+  line-height: 1.55;
+}
+
+.description {
+  margin: var(--space-3) 0 0;
+}
+
+.fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+.activityPicker {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.activityPicker legend {
+  grid-column: 1 / -1;
+  margin-bottom: var(--space-2);
+  font-weight: 700;
+}
+
+.activityPicker input {
+  position: absolute;
+  opacity: 0;
+}
+
+.activityPicker span {
+  display: grid;
+  min-height: var(--tap-target);
+  padding: var(--space-2);
+  place-items: center;
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-round);
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.activityPicker input:checked + span {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+  background: var(--color-primary-soft);
+}
+
+.result {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-primary-soft);
+}
+
+.result strong {
+  color: var(--color-primary);
+  font-size: var(--font-size-xl);
+  white-space: nowrap;
+}
+
+.disclaimer,
+.error {
+  margin: 0;
+  font-size: var(--font-size-sm);
+}
+
+.error {
+  color: var(--color-danger);
+}
+
+@media (max-width: 560px) {
+  .page {
+    align-content: start;
+  }
+
+  .fields,
+  .activityPicker {
+    grid-template-columns: 1fr;
+  }
+
+  .result {
+    display: grid;
+  }
+}

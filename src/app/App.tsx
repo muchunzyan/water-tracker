@@ -3,6 +3,8 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 
 import { AppShell } from './AppShell';
 import { useTheme } from './providers/theme-context';
+import { useSettings } from '../data/hooks';
+import { OnboardingPage } from '../features/onboarding/OnboardingPage';
 import { TodayPage } from '../features/today/TodayPage';
 import { Button } from '../ui/Button/Button';
 import { Card } from '../ui/Card/Card';
@@ -27,8 +29,14 @@ const SettingsPage = lazy(() =>
 );
 
 export function App() {
+  const settings = useSettings();
   const { resolvedTheme, setPreference } = useTheme();
   const nextTheme = resolvedTheme === 'light' ? 'dark' : 'light';
+
+  if (!settings) return <PageLoader />;
+  if (!settings.onboardingCompleted) {
+    return <OnboardingPage settings={settings} />;
+  }
 
   return (
     <AppShell

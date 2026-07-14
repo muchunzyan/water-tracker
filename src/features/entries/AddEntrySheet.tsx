@@ -1,6 +1,6 @@
-import { useState, type FormEvent } from 'react';
+import { useMemo, useState, type FormEvent } from 'react';
 
-import { useDrinks } from '../../data/hooks';
+import { useDrinks, useEntries } from '../../data/hooks';
 import { entryRepository } from '../../data/repositories';
 import {
   calculateEffectiveHydrationMl,
@@ -16,8 +16,7 @@ import { Icon } from '../../ui/Icon/Icon';
 import { Spinner } from '../../ui/Spinner/Spinner';
 import { TextField } from '../../ui/TextField/TextField';
 import styles from './AddEntrySheet.module.css';
-
-const QUICK_VOLUMES = [200, 250, 330, 500] as const;
+import { getDefaultVolume, getQuickVolumes } from './volume-suggestions';
 
 interface AddEntrySheetProps {
   entry?: HydrationEntry | undefined;
@@ -27,8 +26,11 @@ interface AddEntrySheetProps {
 
 export function AddEntrySheet({ entry, onClose, onSaved }: AddEntrySheetProps) {
   const drinks = useDrinks();
+  const entries = useEntries();
   const [selectedDrinkId, setSelectedDrinkId] = useState(entry?.drinkId ?? '');
-  const [volume, setVolume] = useState(String(entry?.volumeMl ?? 250));
+  const [volumeOverride, setVolumeOverride] = useState<string | null>(
+    entry ? String(entry.volumeMl) : null,
+  );
   const [error, setError] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const historicalDrink: Drink | undefined =
@@ -47,7 +49,16 @@ export function AddEntrySheet({ entry, onClose, onSaved }: AddEntrySheetProps) {
     : drinks;
   const selectedDrink =
     availableDrinks?.find((drink) => drink.id === selectedDrinkId) ??
+    availableDrinks?.find((drink) => drink.id === 'builtin-water') ??
     availableDrinks?.[0];
+  const quickVolumes = useMemo(() => getQuickVolumes(entries ?? []), [entries]);
+  const volume =
+    volumeOverride ??
+    String(
+      selectedDrink
+        ? getDefaultVolume(entries ?? [], selectedDrink)
+        : (entry?.volumeMl ?? 250),
+    );
   const volumeMl = Number(volume);
   const isValidVolume =
     Number.isInteger(volumeMl) && volumeMl >= 1 && volumeMl <= 5_000;
@@ -95,7 +106,7 @@ export function AddEntrySheet({ entry, onClose, onSaved }: AddEntrySheetProps) {
       setIsSaving(true);
       await entryRepository.save(result.data);
       onSaved(
-        `${selectedDrink.name}: ${entry ? 'обновлено' : 'добавлено'} ${volumeMl} мл (${effectiveHydrationMl} мл гидратации).`,
+        `${selectedDrink.name}: ${entry ? 'обновлено' : 'добавлено'} ${volumeMl} мл (${effectiveHydrationMl} мл гидратации)`,
       );
     } catch {
       setError('Не удалось сохранить запись. Попробуйте ещё раз.');
@@ -108,7 +119,7 @@ export function AddEntrySheet({ entry, onClose, onSaved }: AddEntrySheetProps) {
     <BottomSheet
       isOpen
       onClose={onClose}
-      title={entry ? 'Изменить запись' : 'Добавить напиток'}
+      title={entry ? 'Изменить запись' : 'Добавить запись'}
     >
       {drinks === undefined ? (
         <div className={styles.loading}>
@@ -142,11 +153,13 @@ export function AddEntrySheet({ entry, onClose, onSaved }: AddEntrySheetProps) {
           <fieldset className={styles.quickVolumes}>
             <legend>Быстрый объём</legend>
             <div>
-              {QUICK_VOLUMES.map((quickVolume) => (
+              {quickVolumes.map((quickVolume) => (
                 <button
                   aria-pressed={volume === String(quickVolume)}
                   key={quickVolume}
-                  onClick={() => setVolume(String(quickVolume))}
+                  onClick={() => {
+                    setVolumeOverride(String(quickVolume));
+                  }}
                   type="button"
                 >
                   {quickVolume} мл
@@ -163,7 +176,9 @@ export function AddEntrySheet({ entry, onClose, onSaved }: AddEntrySheetProps) {
             label="Выпито, мл"
             max={5000}
             min={1}
-            onChange={(event) => setVolume(event.target.value)}
+            onChange={(event) => {
+              setVolumeOverride(event.target.value);
+            }}
             required
             type="number"
             value={volume}

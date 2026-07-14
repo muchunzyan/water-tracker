@@ -30,4 +30,22 @@ describe('buildWeekSummary', () => {
     });
     expect(summary[1]?.progress).toBe(0);
   });
+
+  it('округляет почти выполненную цель вниз', () => {
+    const weekStart = startOfWeek(new Date(2026, 6, 8), { weekStartsOn: 1 });
+    const water = BUILTIN_DRINKS[0]!;
+    const consumedAt = weekStart.toISOString();
+    const entry: HydrationEntry = {
+      id: 'entry-almost-complete',
+      drinkId: water.id,
+      drink: createDrinkSnapshot(water),
+      volumeMl: 2_190,
+      effectiveHydrationMl: 2_190,
+      consumedAt,
+      createdAt: consumedAt,
+      updatedAt: consumedAt,
+    };
+
+    expect(buildWeekSummary([entry], weekStart, 2_200)[0]?.progress).toBe(99);
+  });
 });

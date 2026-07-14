@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { useMemo, useState, type FormEvent } from 'react';
 
 import { useDrinks } from '../../data/hooks';
 import { drinkRepository } from '../../data/repositories';
@@ -16,6 +16,12 @@ import { Icon } from '../../ui/Icon/Icon';
 import { Spinner } from '../../ui/Spinner/Spinner';
 import { TextField } from '../../ui/TextField/TextField';
 import styles from './DrinksPage.module.css';
+import {
+  SORT_MODES,
+  SORT_STORAGE_KEY,
+  sortDrinks,
+  type SortMode,
+} from './sort-drinks';
 
 const ICON_LABELS: Record<DrinkIcon, string> = {
   water: 'Вода',
@@ -40,6 +46,16 @@ const ICON_SYMBOLS: Record<DrinkIcon, string> = {
 export function DrinksPage() {
   const drinks = useDrinks();
   const [editingDrink, setEditingDrink] = useState<Drink | null>();
+  const [sortMode, setSortMode] = useState<SortMode>(() => getStoredSortMode());
+  const sortedDrinks = useMemo(
+    () => sortDrinks(drinks ?? [], sortMode),
+    [drinks, sortMode],
+  );
+
+  function handleSortChange(value: SortMode) {
+    setSortMode(value);
+    window.localStorage.setItem(SORT_STORAGE_KEY, value);
+  }
 
   return (
     <div className={styles.layout}>
@@ -58,6 +74,26 @@ export function DrinksPage() {
           Новый напиток
         </Button>
       </section>
+
+      {drinks !== undefined && drinks.length > 0 ? (
+        <div className={styles.catalogToolbar}>
+          <label>
+            <span>Сортировка</span>
+            <select
+              aria-label="Сортировка напитков"
+              onChange={(event) =>
+                handleSortChange(event.target.value as SortMode)
+              }
+              value={sortMode}
+            >
+              <option value="name-asc">По алфавиту: А–Я</option>
+              <option value="name-desc">По алфавиту: Я–А</option>
+              <option value="hydration-desc">Гидратация: сначала выше</option>
+              <option value="hydration-asc">Гидратация: сначала ниже</option>
+            </select>
+          </label>
+        </div>
+      ) : null}
 
       {drinks === undefined ? (
         <Card className={styles.loading}>
@@ -78,7 +114,7 @@ export function DrinksPage() {
         </Card>
       ) : (
         <div className={styles.grid}>
-          {drinks.map((drink) => (
+          {sortedDrinks.map((drink) => (
             <DrinkCard drink={drink} key={drink.id} onEdit={setEditingDrink} />
           ))}
         </div>
@@ -142,16 +178,14 @@ function DrinkCard({
         </p>
         {error ? <p className={styles.error}>{error}</p> : null}
       </div>
-      {!drink.isBuiltin ? (
-        <div className={styles.actions}>
-          <Button onClick={() => onEdit(drink)} variant="secondary">
-            Изменить
-          </Button>
-          <Button onClick={() => void handleDelete()} variant="ghost">
-            Удалить
-          </Button>
-        </div>
-      ) : null}
+      <div className={styles.actions}>
+        <Button onClick={() => onEdit(drink)} variant="secondary">
+          Изменить
+        </Button>
+        <Button onClick={() => void handleDelete()} variant="ghost">
+          Удалить
+        </Button>
+      </div>
     </Card>
   );
 }
@@ -185,7 +219,7 @@ function DrinkEditor({
       standardVolumeMl: Number(standardVolumeMl),
       color,
       icon,
-      isBuiltin: false,
+      isBuiltin: drink?.isBuiltin ?? false,
       createdAt: drink?.createdAt ?? now,
       updatedAt: now,
     };
@@ -289,4 +323,11 @@ function DrinkEditor({
       </form>
     </BottomSheet>
   );
+}
+
+function getStoredSortMode(): SortMode {
+  const stored = window.localStorage.getItem(SORT_STORAGE_KEY);
+  return SORT_MODES.includes(stored as SortMode)
+    ? (stored as SortMode)
+    : 'name-asc';
 }

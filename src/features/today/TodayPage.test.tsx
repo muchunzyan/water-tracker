@@ -38,6 +38,10 @@ describe('TodayPage', () => {
       screen.getByRole('img', { name: 'Выполнено 25% дневной цели' }),
     ).toBeInTheDocument();
     expect(screen.getByText(/500 из 2.000 мл/)).toBeInTheDocument();
+    expect(screen.getByText('Осталось 1 500 мл')).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Добавить запись' }),
+    ).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Вода' })).toBeInTheDocument();
   });
 });

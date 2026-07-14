@@ -13,6 +13,7 @@ import { useMemo, useState } from 'react';
 import { useEntriesBetween, useSettings } from '../../data/hooks';
 import { entryRepository } from '../../data/repositories';
 import type { HydrationEntry } from '../../domain/models';
+import { calculateProgressPercent } from '../../domain/progress';
 import { Button } from '../../ui/Button/Button';
 import { Card } from '../../ui/Card/Card';
 import { EmptyState } from '../../ui/EmptyState/EmptyState';
@@ -53,7 +54,7 @@ export function HistoryPage() {
   const dayEffectiveMl =
     dayEntries?.reduce((sum, entry) => sum + entry.effectiveHydrationMl, 0) ??
     0;
-  const dayProgress = Math.round((dayEffectiveMl / goalMl) * 100);
+  const dayProgress = calculateProgressPercent(dayEffectiveMl, goalMl);
 
   async function handleDelete(entry: HydrationEntry) {
     if (
@@ -122,10 +123,12 @@ export function HistoryPage() {
               type="button"
             >
               <span className={styles.barTrack}>
-                <span
-                  className={styles.bar}
-                  style={{ height: `${Math.min(day.progress, 100)}%` }}
-                />
+                {day.progress > 0 ? (
+                  <span
+                    className={styles.bar}
+                    style={{ height: `${Math.min(day.progress, 100)}%` }}
+                  />
+                ) : null}
               </span>
               <strong>{day.progress}%</strong>
               <small>{format(day.date, 'EE', { locale: ru })}</small>

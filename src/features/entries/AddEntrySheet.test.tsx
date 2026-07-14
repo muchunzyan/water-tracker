@@ -10,6 +10,7 @@ const { save } = vi.hoisted(() => ({
 
 vi.mock('../../data/hooks', () => ({
   useDrinks: () => BUILTIN_DRINKS,
+  useEntries: () => [],
 }));
 
 vi.mock('../../data/repositories', () => ({

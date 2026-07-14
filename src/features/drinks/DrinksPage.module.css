@@ -39,6 +39,31 @@
   gap: var(--space-4);
 }
 
+.catalogToolbar {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.catalogToolbar label {
+  display: grid;
+  gap: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+}
+
+.catalogToolbar select {
+  min-height: var(--tap-target);
+  padding: 0 var(--space-4);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-round);
+  background: var(--color-surface-solid);
+  cursor: pointer;
+  font-size: var(--font-size-md);
+  font-weight: 700;
+}
+
 .loading {
   display: grid;
   min-height: 220px;
@@ -173,5 +198,11 @@
 
   .formRow {
     grid-template-columns: 1fr;
+  }
+
+  .catalogToolbar,
+  .catalogToolbar label,
+  .catalogToolbar select {
+    width: 100%;
   }
 }

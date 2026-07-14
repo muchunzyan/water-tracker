@@ -26,6 +26,8 @@ npm run build
 
 - [Архитектура](./docs/architecture.md)
 - [План реализации](./docs/implementation-plan.md)
+- [Идеи будущих улучшений](./docs/future-improvements.md)
+- [Методика расчёта гидратации](./docs/hydration-methodology.md)
 
 ## Production-сборка и публикация
 

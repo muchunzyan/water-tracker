@@ -4,6 +4,10 @@ import { useMemo, useState } from 'react';
 import { useEntriesBetween, useSettings } from '../../data/hooks';
 import { entryRepository } from '../../data/repositories';
 import type { HydrationEntry } from '../../domain/models';
+import {
+  calculateProgressPercent,
+  calculateRemainingMl,
+} from '../../domain/progress';
 import { Button } from '../../ui/Button/Button';
 import { Card } from '../../ui/Card/Card';
 import { EmptyState } from '../../ui/EmptyState/EmptyState';
@@ -25,8 +29,9 @@ export function TodayPage() {
   const effectiveHydrationMl =
     entries?.reduce((sum, entry) => sum + entry.effectiveHydrationMl, 0) ?? 0;
   const goalMl = settings?.dailyGoalMl ?? 2_000;
-  const progress = Math.round((effectiveHydrationMl / goalMl) * 100);
+  const progress = calculateProgressPercent(effectiveHydrationMl, goalMl);
   const visualProgress = Math.min(progress, 100);
+  const remainingMl = calculateRemainingMl(effectiveHydrationMl, goalMl);
 
   async function handleDelete(entry: HydrationEntry) {
     if (
@@ -78,6 +83,11 @@ export function TodayPage() {
             {formatMl(effectiveHydrationMl)} из {formatMl(goalMl)} мл
           </p>
           <p>Всего выпито: {formatMl(totalVolumeMl)} мл</p>
+          <p className={styles.remaining}>
+            {remainingMl > 0
+              ? `Осталось ${formatMl(remainingMl)} мл`
+              : 'Цель выполнена'}
+          </p>
         </div>
         <Button
           icon={<Icon name="add" size={20} />}
@@ -86,7 +96,7 @@ export function TodayPage() {
             setEditorEntry(null);
           }}
         >
-          Добавить напиток
+          Добавить запись
         </Button>
       </Card>
 

@@ -1,6 +1,11 @@
 import 'fake-indexeddb/auto';
 
-import { BUILTIN_DRINKS } from '../domain/builtin-drinks';
+import Dexie from 'dexie';
+
+import {
+  BUILTIN_DRINKS,
+  NEW_BUILTIN_DRINKS_V2,
+} from '../domain/builtin-drinks';
 import {
   calculateEffectiveHydrationMl,
   createDrinkSnapshot,
@@ -30,11 +35,33 @@ describe('local database', () => {
   it('создаёт схему первой версии и заполняет начальные данные', async () => {
     await database.open();
 
-    expect(database.verno).toBe(1);
+    expect(database.verno).toBe(2);
     expect(await database.drinks.count()).toBe(BUILTIN_DRINKS.length);
     expect(await new SettingsRepository(database).get()).toEqual(
       DEFAULT_SETTINGS,
     );
+  });
+
+  it('добавляет расширенный каталог при миграции базы версии 1', async () => {
+    database.close();
+    await database.delete();
+    const legacy = new Dexie(database.name);
+    legacy.version(1).stores({
+      drinks: 'id, isBuiltin, name, updatedAt',
+      entries: 'id, drinkId, consumedAt, createdAt',
+      settings: 'id',
+    });
+    await legacy.open();
+    await legacy.table('drinks').add(BUILTIN_DRINKS[0]!);
+    legacy.close();
+
+    database = new WaterTrackerDatabase(database.name);
+    await database.open();
+
+    expect(await database.drinks.count()).toBe(
+      1 + NEW_BUILTIN_DRINKS_V2.length,
+    );
+    expect(await database.drinks.get('builtin-sparkling-water')).toBeDefined();
   });
 
   it('сохраняет пользовательский напиток после повторного открытия базы', async () => {
@@ -87,21 +114,29 @@ describe('local database', () => {
     ).resolves.toHaveLength(1);
   });
 
-  it('защищает встроенные напитки от удаления', async () => {
+  it('удаляет и восстанавливает встроенные напитки', async () => {
     const repository = new DrinkRepository(database);
     await database.open();
 
-    await expect(repository.delete('builtin-water')).rejects.toThrow(
-      'Встроенный напиток нельзя удалить',
-    );
+    await expect(repository.delete('builtin-water')).resolves.toBe(true);
+    await expect(repository.get('builtin-water')).resolves.toBeUndefined();
+
+    await repository.restoreBuiltins();
+    await expect(repository.get('builtin-water')).resolves.toMatchObject({
+      name: 'Вода',
+      isBuiltin: true,
+    });
   });
 
-  it('защищает встроенные напитки от изменения', async () => {
+  it('сохраняет пользовательские параметры встроенного напитка', async () => {
     const repository = new DrinkRepository(database);
 
-    await expect(
-      repository.save({ ...BUILTIN_DRINKS[0]!, name: 'Другая вода' }),
-    ).rejects.toThrow('Встроенный напиток нельзя изменить');
+    await repository.save({ ...BUILTIN_DRINKS[0]!, name: 'Другая вода' });
+
+    await expect(repository.get('builtin-water')).resolves.toMatchObject({
+      name: 'Другая вода',
+      isBuiltin: true,
+    });
   });
 
   it('атомарно сбрасывает записи, пользовательские напитки и настройки', async () => {
@@ -119,7 +154,12 @@ describe('local database', () => {
       createdAt: now,
       updatedAt: now,
     });
-    await settings.save({ version: 1, dailyGoalMl: 3_000, theme: 'dark' });
+    await settings.save({
+      version: 1,
+      dailyGoalMl: 3_000,
+      theme: 'dark',
+      onboardingCompleted: true,
+    });
 
     await resetAllData(database);
 

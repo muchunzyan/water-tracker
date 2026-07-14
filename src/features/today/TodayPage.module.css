@@ -78,6 +78,11 @@
   font-size: var(--font-size-sm);
 }
 
+.summary .remaining {
+  color: var(--color-primary);
+  font-weight: 750;
+}
+
 .notification,
 .error {
   margin: 0;

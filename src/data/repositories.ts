@@ -23,12 +23,6 @@ export class DrinkRepository {
 
   async save(drink: Drink) {
     const validDrink = drinkSchema.parse(drink);
-    const existing = await this.database.drinks.get(validDrink.id);
-
-    if (validDrink.isBuiltin || existing?.isBuiltin) {
-      throw new Error('Встроенный напиток нельзя изменить');
-    }
-
     await this.database.drinks.put(validDrink);
     return validDrink;
   }
@@ -37,10 +31,12 @@ export class DrinkRepository {
     const drink = await this.database.drinks.get(id);
 
     if (!drink) return false;
-    if (drink.isBuiltin) throw new Error('Встроенный напиток нельзя удалить');
-
     await this.database.drinks.delete(id);
     return true;
+  }
+
+  async restoreBuiltins() {
+    await this.database.drinks.bulkPut([...BUILTIN_DRINKS]);
   }
 }
 

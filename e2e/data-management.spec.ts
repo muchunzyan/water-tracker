@@ -1,10 +1,23 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
+
+async function openApp(page: Page, path: string) {
+  await page.goto(path);
+  await page.waitForLoadState('networkidle');
+  const onboarding = page.getByRole('heading', {
+    name: 'Настроим вашу дневную цель',
+  });
+  if ((await onboarding.count()) > 0) {
+    await page.getByRole('button', { name: 'Сохранить и продолжить' }).click();
+    await expect(page.getByRole('link', { name: 'Сегодня' })).toBeVisible();
+    if (path !== '/') await page.goto(path);
+  }
+}
 
 test('пользователь редактирует и удаляет запись текущего дня', async ({
   page,
 }) => {
-  await page.goto('/');
-  await page.getByRole('button', { name: 'Добавить напиток' }).click();
+  await openApp(page, '/');
+  await page.getByRole('button', { name: 'Добавить запись' }).click();
   await page.getByRole('button', { name: '250 мл' }).click();
   await page.getByRole('button', { name: 'Сохранить запись' }).click();
 
@@ -16,7 +29,7 @@ test('пользователь редактирует и удаляет запи
   await page.getByRole('button', { name: 'Сохранить изменения' }).click();
 
   await expect(
-    page.getByRole('img', { name: 'Выполнено 25% дневной цели' }),
+    page.getByRole('img', { name: 'Выполнено 19% дневной цели' }),
   ).toBeVisible();
   await expect(page.getByText('500 мл', { exact: true })).toBeVisible();
 
@@ -28,13 +41,13 @@ test('пользователь редактирует и удаляет запи
 test('пользователь редактирует и удаляет собственный напиток', async ({
   page,
 }) => {
-  await page.goto('/#/drinks');
+  await openApp(page, '/#/drinks');
   await page.getByRole('button', { name: 'Новый напиток' }).click();
-  await page.getByRole('textbox', { name: 'Название' }).fill('Компот');
+  await page.getByRole('textbox', { name: 'Название' }).fill('Тархун');
   await page.getByRole('button', { name: 'Создать' }).click();
 
   const card = page
-    .getByRole('heading', { level: 2, name: 'Компот' })
+    .getByRole('heading', { level: 2, name: 'Тархун' })
     .locator('..')
     .locator('..')
     .locator('..');
@@ -60,7 +73,7 @@ test('пользователь редактирует и удаляет собс
 test('экспорт и импорт восстанавливают настройки из резервной копии', async ({
   page,
 }) => {
-  await page.goto('/#/settings');
+  await openApp(page, '/#/settings');
   const goal = page.getByRole('spinbutton', { name: 'Цель, мл' });
   await goal.fill('2500');
   await page.getByRole('button', { name: 'Сохранить цель' }).click();
