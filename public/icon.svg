@@ -1,6 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="116" fill="#07968d"/>
-  <path d="M256 76c-49 62-128 144-128 244 0 76 57 128 128 128s128-52 128-128c0-100-79-182-128-244Z" fill="#d5f5f0"/>
-  <path d="M186 326c8 42 35 69 78 77" fill="none" stroke="#55d7c9" stroke-linecap="round" stroke-width="28"/>
-  <path d="m205 217 31 112 24-78 25 78 29-112" fill="none" stroke="#07968d" stroke-linecap="round" stroke-linejoin="round" stroke-width="27"/>
+  <defs>
+    <linearGradient id="oasis-background" x1="72" y1="48" x2="440" y2="464" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#38BDF8"/>
+      <stop offset="1" stop-color="#0284C7"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="116" fill="url(#oasis-background)"/>
+  <path fill="#F0FBFF" fill-rule="evenodd" d="M256 92a164 164 0 1 1 0 328 164 164 0 0 1 0-328Zm0 72a92 92 0 1 0 0 184 92 92 0 0 0 0-184Z"/>
+  <path fill="#7DD3FC" d="M256 191c-24 30-61 70-61 117 0 39 27 67 61 67s61-28 61-67c0-47-37-87-61-117Z"/>
+  <path d="M226 314c5 18 16 29 34 34" fill="none" stroke="#E0F7FF" stroke-linecap="round" stroke-width="14"/>
 </svg>

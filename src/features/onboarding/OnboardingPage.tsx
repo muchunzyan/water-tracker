@@ -66,8 +66,10 @@ export function OnboardingPage({ settings }: { settings: Settings }) {
   return (
     <main className={styles.page}>
       <div className={styles.brand}>
-        <span aria-hidden="true">W</span>
-        <strong>Water Tracker</strong>
+        <span aria-hidden="true">
+          <img alt="" src={`${import.meta.env.BASE_URL}icon.svg`} />
+        </span>
+        <strong>Oasis — Water Tracker</strong>
       </div>
       <Card className={styles.card}>
         <div>

@@ -18,6 +18,10 @@ test('первый запуск показывает пустой текущий
 }) => {
   await openApp(page, '/');
 
+  await expect(page).toHaveTitle('Oasis');
+  await expect(
+    page.getByText('Oasis — Water Tracker', { exact: true }),
+  ).toBeVisible();
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Добр');
   await expect(page.getByText('Сегодня записей пока нет')).toBeVisible();
   await page.getByRole('link', { name: 'Напитки' }).click();

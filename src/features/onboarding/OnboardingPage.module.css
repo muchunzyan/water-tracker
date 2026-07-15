@@ -16,14 +16,19 @@
 }
 
 .brand > span {
-  display: grid;
   width: 42px;
   height: 42px;
-  place-items: center;
-  color: var(--color-white);
+  flex: 0 0 42px;
+  overflow: hidden;
   border-radius: var(--radius-sm);
-  background: var(--color-primary);
-  font-weight: 800;
+  box-shadow: 0 8px 18px
+    color-mix(in oklch, var(--color-primary) 24%, transparent);
+}
+
+.brand img {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .card,

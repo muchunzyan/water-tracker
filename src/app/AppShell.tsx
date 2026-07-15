@@ -25,9 +25,9 @@ export function AppShell({ actions, children }: AppShellProps) {
       <header className={styles.header}>
         <div className={styles.brand}>
           <span className={styles.logo} aria-hidden="true">
-            W
+            <img alt="" src={`${import.meta.env.BASE_URL}icon.svg`} />
           </span>
-          <span>Water Tracker</span>
+          <span>Oasis — Water Tracker</span>
         </div>
         {actions ? <div className={styles.actions}>{actions}</div> : null}
       </header>

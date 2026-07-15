@@ -22,8 +22,8 @@ export default defineConfig(({ mode }) => {
           'icon-maskable.svg',
         ],
         manifest: {
-          name: 'Water Tracker — трекер гидратации',
-          short_name: 'Water Tracker',
+          name: 'Oasis — Water Tracker',
+          short_name: 'Oasis',
           description: 'Автономный трекер напитков и эффективной гидратации',
           theme_color: '#0077b6',
           background_color: '#ffffff',

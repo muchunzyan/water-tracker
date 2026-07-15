@@ -116,7 +116,7 @@ effectiveHydrationMl = volumeMl × hydrationPercent / 100
 - **shadcn/ui** на базе Base UI — основные интерактивные примитивы: кнопки, карточки,
   поля, выпадающие списки, диалоги и индикаторы загрузки.
 - **Tailwind CSS 4** — стили сгенерированных shadcn-компонентов и токены пресета.
-- **CSS Modules** — компоновка экранов и специфические стили Water Tracker.
+- **CSS Modules** — компоновка экранов и специфические стили Oasis — Water Tracker.
 - **CSS Custom Properties** — совместимый слой семантических токенов приложения.
 - **Lucide React** — единый набор интерфейсных иконок с tree shaking.
 - **Inter Variable** — локально поставляемый интерфейсный шрифт.

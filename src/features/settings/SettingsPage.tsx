@@ -412,7 +412,8 @@ function SettingsContent({ initialSettings }: { initialSettings: Settings }) {
       </Card>
 
       <p className={styles.version}>
-        Water Tracker · версия {import.meta.env.VITE_APP_VERSION ?? '0.1.0'}
+        Oasis — Water Tracker · версия{' '}
+        {import.meta.env.VITE_APP_VERSION ?? '0.1.0'}
       </p>
     </div>
   );
