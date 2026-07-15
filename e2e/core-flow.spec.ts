@@ -72,6 +72,25 @@ test('пользователь создаёт напиток и добавляе
 
 test('пользователь меняет дневную цель и тему', async ({ page }) => {
   await openApp(page, '/#/settings');
+  const activityBox = await page
+    .getByRole('combobox', { name: 'Активность' })
+    .boundingBox();
+  const themeOptions = await page
+    .getByTestId('theme-picker')
+    .locator('label > span')
+    .all();
+  const themeOptionBoxes = await Promise.all(
+    themeOptions.map((option) => option.boundingBox()),
+  );
+  const themeOptionHeights = themeOptionBoxes.map((box) => box?.height ?? 0);
+  const themeOptionWidths = themeOptionBoxes.map((box) => box?.width ?? 0);
+
+  expect(activityBox?.width).toBeGreaterThan(140);
+  expect(themeOptions).toHaveLength(3);
+  expect(new Set(themeOptionHeights).size).toBe(1);
+  expect(
+    Math.max(...themeOptionWidths) - Math.min(...themeOptionWidths),
+  ).toBeLessThan(1);
   await page.getByRole('spinbutton', { name: 'Цель, мл' }).fill('2500');
   await page.getByRole('button', { name: 'Сохранить цель' }).click();
   await expect(page.getByRole('status')).toContainText(

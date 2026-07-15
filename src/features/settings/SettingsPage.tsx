@@ -313,7 +313,7 @@ function SettingsContent({ initialSettings }: { initialSettings: Settings }) {
           <h2>Тема интерфейса</h2>
           <p>Системная тема автоматически следует настройкам устройства.</p>
         </div>
-        <fieldset className={styles.themePicker}>
+        <fieldset className={styles.themePicker} data-testid="theme-picker">
           <legend className={styles.visuallyHidden}>Тема интерфейса</legend>
           {THEME_PREFERENCES.map((theme) => (
             <label key={theme}>
