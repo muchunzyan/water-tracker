@@ -29,7 +29,11 @@ export function BottomSheet({
       }}
       open={isOpen}
     >
-      <DialogContent className={styles.sheet} showCloseButton={false}>
+      <DialogContent
+        className={styles.sheet}
+        position="custom"
+        showCloseButton={false}
+      >
         <div className={styles.handle} aria-hidden="true" />
         <DialogHeader className={styles.header}>
           <DialogTitle className={styles.title}>{title}</DialogTitle>
