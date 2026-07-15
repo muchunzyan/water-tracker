@@ -69,7 +69,7 @@ export function HistoryPage() {
     try {
       setError('');
       await entryRepository.delete(entry.id);
-      setNotification('Запись удалена.');
+      setNotification('Запись удалена');
     } catch {
       setError('Не удалось удалить запись. Попробуйте ещё раз.');
     }

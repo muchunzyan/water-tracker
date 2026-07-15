@@ -90,7 +90,7 @@ test('экспорт и импорт восстанавливают настро
 
   page.once('dialog', (dialog) => dialog.accept());
   await page.locator('input[type="file"]').setInputFiles(backupPath);
-  await expect(page.getByRole('status')).toContainText(
+  await expect(page.getByRole('status')).toHaveText(
     'Резервная копия восстановлена',
   );
   await expect(goal).toHaveValue('2500');

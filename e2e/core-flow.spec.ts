@@ -74,7 +74,7 @@ test('пользователь создаёт напиток и добавляе
   ).toBeVisible();
 });
 
-test('пользователь меняет дневную цель и тему', async ({ page }) => {
+test('пользователь меняет дневную цель и тему', async ({ page }, testInfo) => {
   await openApp(page, '/#/settings');
   const activityBox = await page
     .getByRole('combobox', { name: 'Активность' })
@@ -95,11 +95,13 @@ test('пользователь меняет дневную цель и тему'
   expect(
     Math.max(...themeOptionWidths) - Math.min(...themeOptionWidths),
   ).toBeLessThan(1);
+  await expect(themeOptions[0]).toHaveCSS(
+    'font-size',
+    testInfo.project.name === 'mobile-chrome' ? '16px' : '14px',
+  );
   await page.getByRole('spinbutton', { name: 'Цель, мл' }).fill('2500');
   await page.getByRole('button', { name: 'Сохранить цель' }).click();
-  await expect(page.getByRole('status')).toContainText(
-    'Дневная цель сохранена',
-  );
+  await expect(page.getByRole('status')).toHaveText('Дневная цель сохранена');
 
   await page.getByRole('radio', { name: 'Тёмная' }).check();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');

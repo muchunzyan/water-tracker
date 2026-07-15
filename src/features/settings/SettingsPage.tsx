@@ -87,7 +87,7 @@ function SettingsContent({ initialSettings }: { initialSettings: Settings }) {
       setIsSaving(true);
       setError('');
       await saveSettings(result.data);
-      setNotification('Дневная цель сохранена.');
+      setNotification('Дневная цель сохранена');
     } catch {
       setError('Не удалось сохранить настройки.');
     } finally {
@@ -122,7 +122,7 @@ function SettingsContent({ initialSettings }: { initialSettings: Settings }) {
       await saveSettings(result.data);
       setDailyGoal(String(recommendedGoal));
       setNotification(
-        `Рекомендованная цель: ${recommendedGoal.toLocaleString('ru-RU')} мл.`,
+        `Рекомендованная цель: ${recommendedGoal.toLocaleString('ru-RU')} мл`,
       );
     } catch {
       setError('Не удалось сохранить параметры.');
@@ -145,7 +145,7 @@ function SettingsContent({ initialSettings }: { initialSettings: Settings }) {
       await resetAllData();
       setPreference('system');
       setDailyGoal('2000');
-      setNotification('Локальные данные сброшены.');
+      setNotification('Локальные данные сброшены');
     } catch {
       setError('Не удалось сбросить данные.');
     }
@@ -163,7 +163,7 @@ function SettingsContent({ initialSettings }: { initialSettings: Settings }) {
     try {
       setError('');
       await drinkRepository.restoreBuiltins();
-      setNotification('Встроенные напитки восстановлены.');
+      setNotification('Встроенные напитки восстановлены');
     } catch {
       setError('Не удалось восстановить встроенные напитки.');
     }
@@ -183,7 +183,7 @@ function SettingsContent({ initialSettings }: { initialSettings: Settings }) {
       link.download = `water-tracker-backup-${new Date().toISOString().slice(0, 10)}.json`;
       link.click();
       URL.revokeObjectURL(url);
-      setNotification('Резервная копия создана.');
+      setNotification('Резервная копия создана');
     } catch {
       setError('Не удалось создать резервную копию.');
     } finally {
@@ -208,7 +208,7 @@ function SettingsContent({ initialSettings }: { initialSettings: Settings }) {
       await replaceFromBackup(backup);
       setPreference(backup.settings.theme);
       setDailyGoal(String(backup.settings.dailyGoalMl));
-      setNotification('Резервная копия восстановлена.');
+      setNotification('Резервная копия восстановлена');
     } catch {
       setError(
         'Файл повреждён или имеет неподдерживаемый формат. Данные не изменены.',
