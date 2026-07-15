@@ -139,7 +139,7 @@ export function HistoryPage() {
         </div>
       </Card>
 
-      <Card className={styles.daySummary}>
+      <Card className={styles.daySummary} data-testid="day-summary">
         <div>
           <p className={styles.cardLabel}>Итог дня</p>
           <h2>{formatMl(dayEffectiveMl)} мл гидратации</h2>

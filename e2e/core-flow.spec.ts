@@ -86,3 +86,19 @@ test('пользователь меняет дневную цель и тему'
   );
   await expect(page.getByRole('radio', { name: 'Тёмная' })).toBeChecked();
 });
+
+test('история сохраняет выравнивание выбранного дня и итогов', async ({
+  page,
+}) => {
+  await openApp(page, '/#/history');
+
+  const selectedDay = page.locator('button[aria-pressed="true"]');
+  await expect(selectedDay).toHaveCount(1);
+  const selectedDayBox = await selectedDay.boundingBox();
+
+  expect(selectedDayBox?.height).toBeGreaterThan(160);
+  await expect(page.getByTestId('day-summary')).toHaveCSS(
+    'flex-direction',
+    'row',
+  );
+});

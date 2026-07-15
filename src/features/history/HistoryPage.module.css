@@ -74,7 +74,9 @@
   display: grid;
   grid-template-rows: 1fr auto auto;
   gap: var(--space-2);
+  height: auto;
   min-width: 0;
+  min-height: 210px;
   padding: var(--space-2);
   color: var(--color-text-muted);
   border: 0;
@@ -120,6 +122,10 @@
 .daySummary > strong {
   color: var(--color-primary);
   font-size: var(--font-size-xl);
+}
+
+.daySummary {
+  flex-direction: row;
 }
 
 .notification,
@@ -213,6 +219,7 @@
   }
 
   .chart button {
+    min-height: 172px;
     padding: var(--space-1);
     font-size: var(--font-size-xs);
   }
