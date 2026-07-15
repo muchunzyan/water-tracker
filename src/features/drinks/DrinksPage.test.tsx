@@ -1,4 +1,5 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
 
 import { BUILTIN_DRINKS } from '../../domain/builtin-drinks';
@@ -34,12 +35,15 @@ describe('DrinksPage', () => {
     );
   });
 
-  it('сортирует напитки по гидратации', () => {
+  it('сортирует напитки по гидратации', async () => {
+    const user = userEvent.setup();
     render(<DrinksPage />);
 
-    fireEvent.change(
+    await user.click(
       screen.getByRole('combobox', { name: 'Сортировка напитков' }),
-      { target: { value: 'hydration-asc' } },
+    );
+    await user.click(
+      screen.getByRole('option', { name: 'Гидратация: сначала ниже' }),
     );
 
     const headings = screen.getAllByRole('heading', { level: 2 });

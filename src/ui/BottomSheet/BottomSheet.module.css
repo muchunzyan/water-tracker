@@ -1,33 +1,16 @@
-.dialog {
-  width: 100%;
-  max-width: none;
-  height: 100%;
-  max-height: none;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  color: var(--color-text);
-  border: 0;
-  background: transparent;
-}
-
-.dialog::backdrop {
-  background: var(--color-overlay);
-  backdrop-filter: blur(4px);
-}
-
 .sheet {
-  position: absolute;
-  right: 0;
+  top: auto;
   bottom: 0;
   left: 0;
+  width: 100%;
+  max-width: none;
   max-height: min(88svh, 720px);
   padding: var(--space-2) var(--space-5)
     calc(var(--space-6) + env(safe-area-inset-bottom));
   overflow-y: auto;
   border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-  background: var(--color-surface-solid);
-  box-shadow: var(--shadow-floating);
+  translate: none;
+  transform: none;
 }
 
 .handle {
@@ -40,14 +23,17 @@
 
 .header {
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-4);
+  text-align: left;
 }
 
 .title {
   margin: 0;
   font-size: var(--font-size-xl);
+  font-weight: 700;
 }
 
 .content {
@@ -57,7 +43,6 @@
 @media (min-width: 760px) {
   .sheet {
     top: 50%;
-    right: auto;
     bottom: auto;
     left: 50%;
     width: min(560px, calc(100% - 48px));

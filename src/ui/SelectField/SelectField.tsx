@@ -1,49 +1,121 @@
-import { type SelectHTMLAttributes, useId } from 'react';
+import {
+  Children,
+  isValidElement,
+  type OptionHTMLAttributes,
+  type ReactElement,
+  type ReactNode,
+  useId,
+} from 'react';
 
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldLabel,
+} from '@/components/ui/field';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { cn } from '@/lib/utils';
 import styles from './SelectField.module.css';
 
-interface SelectFieldProps extends SelectHTMLAttributes<HTMLSelectElement> {
-  error?: string | undefined;
-  hint?: string | undefined;
+type OptionElement = ReactElement<
+  OptionHTMLAttributes<HTMLOptionElement>,
+  'option'
+>;
+
+interface SelectFieldProps {
+  'aria-label'?: string;
+  children: ReactNode;
+  className?: string;
+  defaultValue?: string;
+  disabled?: boolean;
+  error?: string;
+  hint?: string;
+  id?: string;
   label: string;
+  name?: string;
+  onValueChange?: (value: string) => void;
+  required?: boolean;
+  value?: string;
 }
 
 export function SelectField({
+  'aria-label': ariaLabel,
   children,
   className,
+  defaultValue,
+  disabled,
   error,
   hint,
   id,
   label,
-  ...props
+  name,
+  onValueChange,
+  required,
+  value,
 }: SelectFieldProps) {
   const generatedId = useId();
   const selectId = id ?? generatedId;
-  const description = error ?? hint;
-  const descriptionId = description ? `${selectId}-description` : undefined;
-  const classes = [styles.select, error && styles.invalid, className]
-    .filter(Boolean)
-    .join(' ');
+  const descriptionId = error || hint ? `${selectId}-description` : undefined;
+  const options = Children.toArray(children).filter(
+    (child): child is OptionElement =>
+      isValidElement<OptionHTMLAttributes<HTMLOptionElement>>(child) &&
+      child.type === 'option',
+  );
+  const items = options.map((option) => ({
+    label: option.props.children,
+    value: String(option.props.value ?? ''),
+  }));
 
   return (
-    <div className={styles.field}>
-      <label className={styles.label} htmlFor={selectId}>
-        {label}
-      </label>
-      <select
-        aria-describedby={descriptionId}
-        aria-invalid={Boolean(error)}
-        className={classes}
-        id={selectId}
-        {...props}
+    <Field className={styles.field} data-invalid={Boolean(error)}>
+      <FieldLabel htmlFor={selectId}>{label}</FieldLabel>
+      <Select
+        defaultValue={defaultValue}
+        disabled={disabled}
+        items={items}
+        name={name}
+        onValueChange={(nextValue) => {
+          if (nextValue !== null) onValueChange?.(nextValue);
+        }}
+        required={required}
+        value={value}
       >
-        {children}
-      </select>
-      {description ? (
-        <span className={error ? styles.error : styles.hint} id={descriptionId}>
-          {description}
-        </span>
+        <SelectTrigger
+          aria-describedby={descriptionId}
+          aria-invalid={Boolean(error)}
+          aria-label={ariaLabel}
+          className={cn(styles.trigger, className)}
+          id={selectId}
+        >
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent align="start" alignItemWithTrigger={false}>
+          {options.map((option) => {
+            const optionValue = String(option.props.value ?? '');
+
+            return (
+              <SelectItem
+                disabled={option.props.disabled}
+                key={optionValue}
+                value={optionValue}
+              >
+                {option.props.children}
+              </SelectItem>
+            );
+          })}
+        </SelectContent>
+      </Select>
+      {error ? (
+        <FieldError id={descriptionId}>{error}</FieldError>
+      ) : hint ? (
+        <FieldDescription id={descriptionId}>{hint}</FieldDescription>
       ) : null}
-    </div>
+    </Field>
   );
 }

@@ -1,4 +1,5 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
 
 import { SelectField } from './SelectField';
@@ -18,22 +19,25 @@ describe('SelectField', () => {
     expect(select).toHaveAttribute('aria-describedby', error.id);
   });
 
-  it('передаёт выбранное значение обработчику', () => {
-    const onChange = vi.fn();
+  it('передаёт выбранное значение обработчику', async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
     render(
-      <SelectField label="Напиток" onChange={onChange} defaultValue="water">
+      <SelectField
+        defaultValue="water"
+        label="Напиток"
+        onValueChange={onValueChange}
+      >
         <option value="water">Вода</option>
         <option value="tea">Чай</option>
       </SelectField>,
     );
 
-    fireEvent.change(screen.getByRole('combobox', { name: 'Напиток' }), {
-      target: { value: 'tea' },
-    });
+    const select = screen.getByRole('combobox', { name: 'Напиток' });
+    select.focus();
+    await user.keyboard('{ArrowDown}{ArrowDown}{Enter}');
 
-    expect(onChange).toHaveBeenCalledOnce();
-    expect(screen.getByRole('combobox', { name: 'Напиток' })).toHaveValue(
-      'tea',
-    );
+    expect(onValueChange).toHaveBeenCalledWith('tea');
+    expect(select).toHaveTextContent('Чай');
   });
 });

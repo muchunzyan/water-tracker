@@ -1,5 +1,11 @@
-import { type PropsWithChildren, useEffect, useId, useRef } from 'react';
+import type { PropsWithChildren } from 'react';
 
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Button } from '../Button/Button';
 import { Icon } from '../Icon/Icon';
 import styles from './BottomSheet.module.css';
@@ -16,39 +22,23 @@ export function BottomSheet({
   onClose,
   title,
 }: BottomSheetProps) {
-  const titleId = useId();
-  const dialogRef = useRef<HTMLDialogElement>(null);
-
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    if (!dialog) return;
-
-    if (isOpen && !dialog.open) dialog.showModal();
-    if (!isOpen && dialog.open) dialog.close();
-  }, [isOpen]);
-
   return (
-    <dialog
-      aria-labelledby={titleId}
-      className={styles.dialog}
-      onCancel={onClose}
-      onClick={(event) => {
-        if (event.target === event.currentTarget) onClose();
+    <Dialog
+      onOpenChange={(open) => {
+        if (!open) onClose();
       }}
-      ref={dialogRef}
+      open={isOpen}
     >
-      <section className={styles.sheet}>
+      <DialogContent className={styles.sheet} showCloseButton={false}>
         <div className={styles.handle} aria-hidden="true" />
-        <header className={styles.header}>
-          <h2 className={styles.title} id={titleId}>
-            {title}
-          </h2>
+        <DialogHeader className={styles.header}>
+          <DialogTitle className={styles.title}>{title}</DialogTitle>
           <Button aria-label="Закрыть" onClick={onClose} variant="ghost">
             <Icon name="close" size={20} />
           </Button>
-        </header>
+        </DialogHeader>
         <div className={styles.content}>{children}</div>
-      </section>
-    </dialog>
+      </DialogContent>
+    </Dialog>
   );
 }

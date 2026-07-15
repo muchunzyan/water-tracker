@@ -1,5 +1,13 @@
 import { type InputHTMLAttributes, useId } from 'react';
 
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldLabel,
+} from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+import { cn } from '@/lib/utils';
 import styles from './TextField.module.css';
 
 interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -18,29 +26,22 @@ export function TextField({
 }: TextFieldProps) {
   const generatedId = useId();
   const inputId = id ?? generatedId;
-  const description = error ?? hint;
-  const descriptionId = description ? `${inputId}-description` : undefined;
-  const classes = [styles.input, error && styles.invalid, className]
-    .filter(Boolean)
-    .join(' ');
-
+  const descriptionId = error || hint ? `${inputId}-description` : undefined;
   return (
-    <div className={styles.field}>
-      <label className={styles.label} htmlFor={inputId}>
-        {label}
-      </label>
-      <input
+    <Field className={styles.field} data-invalid={Boolean(error)}>
+      <FieldLabel htmlFor={inputId}>{label}</FieldLabel>
+      <Input
         aria-describedby={descriptionId}
         aria-invalid={Boolean(error)}
-        className={classes}
+        className={cn(styles.input, className)}
         id={inputId}
         {...props}
       />
-      {description ? (
-        <span className={error ? styles.error : styles.hint} id={descriptionId}>
-          {description}
-        </span>
+      {error ? (
+        <FieldError id={descriptionId}>{error}</FieldError>
+      ) : hint ? (
+        <FieldDescription id={descriptionId}>{hint}</FieldDescription>
       ) : null}
-    </div>
+    </Field>
   );
 }

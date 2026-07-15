@@ -1,15 +1,15 @@
-import type { HTMLAttributes, PropsWithChildren } from 'react';
+import type { ComponentProps } from 'react';
 
+import { Card as ShadcnCard } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 import styles from './Card.module.css';
 
-type CardProps = PropsWithChildren<HTMLAttributes<HTMLElement>>;
+type CardProps = ComponentProps<typeof ShadcnCard>;
 
 export function Card({ children, className, ...props }: CardProps) {
-  const classes = [styles.card, className].filter(Boolean).join(' ');
-
   return (
-    <section className={classes} {...props}>
+    <ShadcnCard className={cn(styles.card, className)} {...props}>
       {children}
-    </section>
+    </ShadcnCard>
   );
 }

@@ -1,55 +1,13 @@
 .field {
-  display: grid;
-  gap: var(--space-2);
   min-width: 0;
-  color: var(--color-text);
+  gap: var(--space-2);
 }
 
-.label {
-  font-size: var(--font-size-sm);
-  font-weight: 700;
-}
-
-.select {
+.trigger {
   width: 100%;
   min-width: 0;
   min-height: var(--control-height);
-  padding: 0 var(--space-4);
-  color: var(--color-text);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  background-color: var(--color-surface-solid);
-  cursor: pointer;
+  padding-right: var(--space-4);
+  padding-left: var(--space-4);
   font-size: var(--font-size-md);
-  transition:
-    border-color var(--transition-fast),
-    box-shadow var(--transition-fast);
-}
-
-.select:focus {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 4px var(--color-primary-soft);
-  outline: none;
-}
-
-.select:disabled {
-  cursor: not-allowed;
-  opacity: 0.55;
-}
-
-.invalid {
-  border-color: var(--color-danger);
-}
-
-.hint,
-.error {
-  font-size: var(--font-size-xs);
-}
-
-.hint {
-  color: var(--color-text-subtle);
-}
-
-.error {
-  color: var(--color-danger);
 }

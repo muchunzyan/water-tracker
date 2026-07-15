@@ -293,9 +293,7 @@ function SettingsContent({ initialSettings }: { initialSettings: Settings }) {
           />
           <SelectField
             label="Активность"
-            onChange={(event) =>
-              setActivityLevel(event.target.value as ActivityLevel)
-            }
+            onValueChange={(value) => setActivityLevel(value as ActivityLevel)}
             value={activityLevel}
           >
             {ACTIVITY_LEVELS.map((level) => (

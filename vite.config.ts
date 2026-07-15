@@ -1,3 +1,6 @@
+import path from 'node:path';
+
+import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import { defineConfig, loadEnv } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
@@ -9,6 +12,7 @@ export default defineConfig(({ mode }) => {
     base: env.VITE_BASE_PATH || '/',
     plugins: [
       react(),
+      tailwindcss(),
       VitePWA({
         injectRegister: false,
         registerType: 'prompt',
@@ -21,8 +25,8 @@ export default defineConfig(({ mode }) => {
           name: 'Water Tracker — трекер гидратации',
           short_name: 'Water Tracker',
           description: 'Автономный трекер напитков и эффективной гидратации',
-          theme_color: '#07968d',
-          background_color: '#e9f8f5',
+          theme_color: '#1447e6',
+          background_color: '#ffffff',
           display: 'standalone',
           orientation: 'portrait-primary',
           start_url: './',
@@ -56,5 +60,10 @@ export default defineConfig(({ mode }) => {
         },
       }),
     ],
+    resolve: {
+      alias: {
+        '@': path.resolve(import.meta.dirname, './src'),
+      },
+    },
   };
 });

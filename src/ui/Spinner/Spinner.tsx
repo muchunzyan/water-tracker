@@ -1,3 +1,4 @@
+import { Spinner as ShadcnSpinner } from '@/components/ui/spinner';
 import styles from './Spinner.module.css';
 
 interface SpinnerProps {
@@ -5,5 +6,5 @@ interface SpinnerProps {
 }
 
 export function Spinner({ label = 'Загрузка' }: SpinnerProps) {
-  return <span aria-label={label} className={styles.spinner} role="status" />;
+  return <ShadcnSpinner aria-label={label} className={styles.spinner} />;
 }

@@ -139,7 +139,7 @@ export function AddEntrySheet({ entry, onClose, onSaved }: AddEntrySheetProps) {
         >
           <SelectField
             label="Напиток"
-            onChange={(event) => setSelectedDrinkId(event.target.value)}
+            onValueChange={setSelectedDrinkId}
             value={selectedDrink?.id ?? ''}
           >
             {availableDrinks?.map((drink) => (
@@ -153,16 +153,17 @@ export function AddEntrySheet({ entry, onClose, onSaved }: AddEntrySheetProps) {
             <legend>Быстрый объём</legend>
             <div>
               {quickVolumes.map((quickVolume) => (
-                <button
+                <Button
                   aria-pressed={volume === String(quickVolume)}
                   key={quickVolume}
                   onClick={() => {
                     setVolumeOverride(String(quickVolume));
                   }}
                   type="button"
+                  variant="ghost"
                 >
                   {quickVolume} мл
-                </button>
+                </Button>
               ))}
             </div>
           </fieldset>

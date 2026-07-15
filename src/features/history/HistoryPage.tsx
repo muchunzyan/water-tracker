@@ -10,6 +10,7 @@ import {
 import { ru } from 'date-fns/locale';
 import { useMemo, useState } from 'react';
 
+import { Button as ShadcnButton } from '@/components/ui/button';
 import { useEntriesBetween, useSettings } from '../../data/hooks';
 import { entryRepository } from '../../data/repositories';
 import type { HydrationEntry } from '../../domain/models';
@@ -114,13 +115,14 @@ export function HistoryPage() {
         </div>
         <div className={styles.chart} aria-label="Выполнение цели за неделю">
           {weekSummary.map((day) => (
-            <button
+            <ShadcnButton
               aria-label={`${format(day.date, 'EEEE, d MMMM', { locale: ru })}: ${day.progress}%`}
               aria-pressed={isSameDay(day.date, selectedDate)}
               disabled={isAfter(day.date, new Date())}
               key={day.date.toISOString()}
               onClick={() => setSelectedDate(day.date)}
               type="button"
+              variant="ghost"
             >
               <span className={styles.barTrack}>
                 {day.progress > 0 ? (
@@ -132,7 +134,7 @@ export function HistoryPage() {
               </span>
               <strong>{day.progress}%</strong>
               <small>{format(day.date, 'EE', { locale: ru })}</small>
-            </button>
+            </ShadcnButton>
           ))}
         </div>
       </Card>

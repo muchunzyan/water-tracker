@@ -98,9 +98,7 @@ export function DrinksPage() {
           <SelectField
             aria-label="Сортировка напитков"
             label="Сортировка"
-            onChange={(event) =>
-              handleSortChange(event.target.value as SortMode)
-            }
+            onValueChange={(value) => handleSortChange(value as SortMode)}
             value={sortMode}
           >
             <option value="name-asc">По алфавиту: А–Я</option>
@@ -318,7 +316,7 @@ function DrinkEditor({
           <SelectField
             label="Иконка"
             value={icon}
-            onChange={(event) => setIcon(event.target.value as DrinkIcon)}
+            onValueChange={(value) => setIcon(value as DrinkIcon)}
           >
             {DRINK_ICONS.map((value) => (
               <option key={value} value={value}>
