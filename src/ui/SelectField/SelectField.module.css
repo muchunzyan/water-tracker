@@ -5,6 +5,7 @@
 
 .trigger {
   width: 100%;
+  height: var(--control-height);
   min-width: 0;
   min-height: var(--control-height);
   padding-right: var(--space-4);
