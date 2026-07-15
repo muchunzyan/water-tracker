@@ -25,7 +25,7 @@ export default defineConfig(({ mode }) => {
           name: 'Water Tracker — трекер гидратации',
           short_name: 'Water Tracker',
           description: 'Автономный трекер напитков и эффективной гидратации',
-          theme_color: '#1447e6',
+          theme_color: '#0077b6',
           background_color: '#ffffff',
           display: 'standalone',
           orientation: 'portrait-primary',
