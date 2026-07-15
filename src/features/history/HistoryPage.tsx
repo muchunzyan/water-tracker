@@ -124,7 +124,7 @@ export function HistoryPage() {
               type="button"
               variant="ghost"
             >
-              <span className={styles.barTrack}>
+              <span className={styles.barTrack} data-testid="week-bar-track">
                 {day.progress > 0 ? (
                   <span
                     className={styles.bar}

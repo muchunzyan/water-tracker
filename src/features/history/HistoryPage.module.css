@@ -72,7 +72,7 @@
 
 .chart button {
   display: grid;
-  grid-template-rows: 1fr auto auto;
+  grid-template-rows: minmax(130px, 1fr) auto auto;
   gap: var(--space-2);
   height: auto;
   min-width: 0;
@@ -99,8 +99,8 @@
   position: relative;
   display: block;
   width: min(28px, 80%);
-  height: 130px;
-  margin: auto auto 0;
+  height: 100%;
+  margin: 0 auto;
   overflow: hidden;
   border-radius: var(--radius-round);
   background: var(--color-surface-muted);
@@ -222,10 +222,6 @@
     min-height: 172px;
     padding: var(--space-1);
     font-size: var(--font-size-xs);
-  }
-
-  .barTrack {
-    height: 100px;
   }
 
   .cardHeader {
