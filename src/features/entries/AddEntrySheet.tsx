@@ -14,6 +14,7 @@ import { Button } from '../../ui/Button/Button';
 import { EmptyState } from '../../ui/EmptyState/EmptyState';
 import { Icon } from '../../ui/Icon/Icon';
 import { Spinner } from '../../ui/Spinner/Spinner';
+import { SelectField } from '../../ui/SelectField/SelectField';
 import { TextField } from '../../ui/TextField/TextField';
 import styles from './AddEntrySheet.module.css';
 import { getDefaultVolume, getQuickVolumes } from './volume-suggestions';
@@ -136,19 +137,17 @@ export function AddEntrySheet({ entry, onClose, onSaved }: AddEntrySheetProps) {
           className={styles.form}
           onSubmit={(event) => void handleSubmit(event)}
         >
-          <label className={styles.selectField}>
-            <span>Напиток</span>
-            <select
-              onChange={(event) => setSelectedDrinkId(event.target.value)}
-              value={selectedDrink?.id ?? ''}
-            >
-              {availableDrinks?.map((drink) => (
-                <option key={drink.id} value={drink.id}>
-                  {drink.name} · {drink.hydrationPercent}%
-                </option>
-              ))}
-            </select>
-          </label>
+          <SelectField
+            label="Напиток"
+            onChange={(event) => setSelectedDrinkId(event.target.value)}
+            value={selectedDrink?.id ?? ''}
+          >
+            {availableDrinks?.map((drink) => (
+              <option key={drink.id} value={drink.id}>
+                {drink.name} · {drink.hydrationPercent}%
+              </option>
+            ))}
+          </SelectField>
 
           <fieldset className={styles.quickVolumes}>
             <legend>Быстрый объём</legend>

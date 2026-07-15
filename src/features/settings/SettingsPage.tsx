@@ -21,6 +21,7 @@ import { calculateRecommendedGoalMl } from '../../domain/hydration-goal';
 import { Button } from '../../ui/Button/Button';
 import { Card } from '../../ui/Card/Card';
 import { Spinner } from '../../ui/Spinner/Spinner';
+import { SelectField } from '../../ui/SelectField/SelectField';
 import { TextField } from '../../ui/TextField/TextField';
 import styles from './SettingsPage.module.css';
 
@@ -290,21 +291,19 @@ function SettingsContent({ initialSettings }: { initialSettings: Settings }) {
             type="number"
             value={weightKg}
           />
-          <label className={styles.activityField}>
-            <span>Активность</span>
-            <select
-              onChange={(event) =>
-                setActivityLevel(event.target.value as ActivityLevel)
-              }
-              value={activityLevel}
-            >
-              {ACTIVITY_LEVELS.map((level) => (
-                <option key={level} value={level}>
-                  {ACTIVITY_LABELS[level]}
-                </option>
-              ))}
-            </select>
-          </label>
+          <SelectField
+            label="Активность"
+            onChange={(event) =>
+              setActivityLevel(event.target.value as ActivityLevel)
+            }
+            value={activityLevel}
+          >
+            {ACTIVITY_LEVELS.map((level) => (
+              <option key={level} value={level}>
+                {ACTIVITY_LABELS[level]}
+              </option>
+            ))}
+          </SelectField>
           <Button isLoading={isSaving} type="submit">
             Пересчитать цель
           </Button>

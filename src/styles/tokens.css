@@ -59,6 +59,7 @@
   --transition-fast: 160ms ease;
   --content-width: 1120px;
   --tap-target: 48px;
+  --control-height: 52px;
 }
 
 :root[data-theme='dark'] {

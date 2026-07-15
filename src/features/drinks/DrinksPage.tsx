@@ -14,6 +14,7 @@ import { Card } from '../../ui/Card/Card';
 import { EmptyState } from '../../ui/EmptyState/EmptyState';
 import { Icon } from '../../ui/Icon/Icon';
 import { Spinner } from '../../ui/Spinner/Spinner';
+import { SelectField } from '../../ui/SelectField/SelectField';
 import { TextField } from '../../ui/TextField/TextField';
 import styles from './DrinksPage.module.css';
 import {
@@ -77,21 +78,19 @@ export function DrinksPage() {
 
       {drinks !== undefined && drinks.length > 0 ? (
         <div className={styles.catalogToolbar}>
-          <label>
-            <span>Сортировка</span>
-            <select
-              aria-label="Сортировка напитков"
-              onChange={(event) =>
-                handleSortChange(event.target.value as SortMode)
-              }
-              value={sortMode}
-            >
-              <option value="name-asc">По алфавиту: А–Я</option>
-              <option value="name-desc">По алфавиту: Я–А</option>
-              <option value="hydration-desc">Гидратация: сначала выше</option>
-              <option value="hydration-asc">Гидратация: сначала ниже</option>
-            </select>
-          </label>
+          <SelectField
+            aria-label="Сортировка напитков"
+            label="Сортировка"
+            onChange={(event) =>
+              handleSortChange(event.target.value as SortMode)
+            }
+            value={sortMode}
+          >
+            <option value="name-asc">По алфавиту: А–Я</option>
+            <option value="name-desc">По алфавиту: Я–А</option>
+            <option value="hydration-desc">Гидратация: сначала выше</option>
+            <option value="hydration-asc">Гидратация: сначала ниже</option>
+          </SelectField>
         </div>
       ) : null}
 
@@ -286,19 +285,17 @@ function DrinkEditor({
           />
         </div>
         <div className={styles.formRow}>
-          <label className={styles.selectField}>
-            <span>Иконка</span>
-            <select
-              value={icon}
-              onChange={(event) => setIcon(event.target.value as DrinkIcon)}
-            >
-              {DRINK_ICONS.map((value) => (
-                <option key={value} value={value}>
-                  {ICON_SYMBOLS[value]} {ICON_LABELS[value]}
-                </option>
-              ))}
-            </select>
-          </label>
+          <SelectField
+            label="Иконка"
+            value={icon}
+            onChange={(event) => setIcon(event.target.value as DrinkIcon)}
+          >
+            {DRINK_ICONS.map((value) => (
+              <option key={value} value={value}>
+                {ICON_SYMBOLS[value]} {ICON_LABELS[value]}
+              </option>
+            ))}
+          </SelectField>
           <TextField
             className={styles.colorInput}
             label="Цвет"
