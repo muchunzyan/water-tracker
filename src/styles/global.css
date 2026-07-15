@@ -14,7 +14,7 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
-  --background: oklch(1 0 0);
+  --background: #f3faff;
   --foreground: oklch(0.148 0.004 228.8);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.148 0.004 228.8);
@@ -62,13 +62,7 @@ body {
   min-width: 320px;
   min-height: 100vh;
   margin: 0;
-  background:
-    radial-gradient(
-      circle at 12% 8%,
-      var(--color-background-accent),
-      transparent 34%
-    ),
-    var(--color-background);
+  background: var(--color-background);
 }
 
 button,

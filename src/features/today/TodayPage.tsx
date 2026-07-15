@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { useEntriesBetween, useSettings } from '../../data/hooks';
 import { entryRepository } from '../../data/repositories';
@@ -24,6 +24,8 @@ export function TodayPage() {
   const [editorEntry, setEditorEntry] = useState<HydrationEntry | null>();
   const [notification, setNotification] = useState('');
   const [error, setError] = useState('');
+  const [isCelebrating, setIsCelebrating] = useState(false);
+  const previousProgress = useRef<number | null>(null);
   const totalVolumeMl =
     entries?.reduce((sum, entry) => sum + entry.volumeMl, 0) ?? 0;
   const effectiveHydrationMl =
@@ -32,6 +34,28 @@ export function TodayPage() {
   const progress = calculateProgressPercent(effectiveHydrationMl, goalMl);
   const visualProgress = Math.min(progress, 100);
   const remainingMl = calculateRemainingMl(effectiveHydrationMl, goalMl);
+  const isHydrationLoaded = entries !== undefined && settings !== undefined;
+
+  useEffect(() => {
+    if (!isHydrationLoaded) return;
+
+    if (
+      previousProgress.current !== null &&
+      previousProgress.current < 100 &&
+      progress >= 100
+    ) {
+      setIsCelebrating(true);
+    }
+
+    previousProgress.current = progress;
+  }, [isHydrationLoaded, progress]);
+
+  useEffect(() => {
+    if (!isCelebrating) return;
+
+    const timeout = window.setTimeout(() => setIsCelebrating(false), 1_800);
+    return () => window.clearTimeout(timeout);
+  }, [isCelebrating]);
 
   async function handleDelete(entry: HydrationEntry) {
     if (
@@ -61,7 +85,21 @@ export function TodayPage() {
         </p>
       </section>
 
-      <Card className={styles.progressCard}>
+      <Card
+        className={`${styles.progressCard} ${isCelebrating ? styles.goalReached : ''}`}
+        data-celebrating={isCelebrating || undefined}
+      >
+        {isCelebrating ? (
+          <span
+            aria-hidden="true"
+            className={styles.celebration}
+            data-testid="goal-celebration"
+          >
+            {Array.from({ length: 9 }, (_, index) => (
+              <span key={index} />
+            ))}
+          </span>
+        ) : null}
         <div
           aria-label={`Выполнено ${progress}% дневной цели`}
           className={styles.progressRing}

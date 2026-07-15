@@ -30,11 +30,120 @@
 }
 
 .progressCard {
+  position: relative;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
+  overflow: hidden;
   align-items: center;
   gap: var(--space-6);
   padding: var(--space-6);
+  isolation: isolate;
+}
+
+.progressCard > :not(.celebration) {
+  position: relative;
+  z-index: 1;
+}
+
+.goalReached {
+  animation: goal-card-celebration 1.2s ease-out;
+}
+
+.goalReached::after {
+  position: absolute;
+  z-index: 0;
+  top: 50%;
+  left: 80px;
+  width: 118px;
+  height: 118px;
+  border: 2px solid var(--color-primary);
+  border-radius: 50%;
+  content: '';
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  animation: goal-ripple 1.35s ease-out;
+}
+
+.goalReached .progressRing {
+  animation: goal-ring-celebration 900ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.celebration {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.celebration > span {
+  position: absolute;
+  bottom: -20px;
+  width: 12px;
+  height: 12px;
+  border: 2px solid color-mix(in oklch, var(--color-primary) 70%, white);
+  border-radius: 50%;
+  background: color-mix(in oklch, var(--color-primary) 16%, transparent);
+  opacity: 0;
+  animation: hydration-bubble 1.45s ease-out forwards;
+}
+
+.celebration > span:nth-child(1) {
+  left: 7%;
+  animation-delay: 40ms;
+}
+
+.celebration > span:nth-child(2) {
+  left: 17%;
+  width: 8px;
+  height: 8px;
+  animation-delay: 180ms;
+}
+
+.celebration > span:nth-child(3) {
+  left: 29%;
+  width: 16px;
+  height: 16px;
+  animation-delay: 80ms;
+}
+
+.celebration > span:nth-child(4) {
+  left: 41%;
+  animation-delay: 250ms;
+}
+
+.celebration > span:nth-child(5) {
+  left: 54%;
+  width: 9px;
+  height: 9px;
+  animation-delay: 120ms;
+}
+
+.celebration > span:nth-child(6) {
+  left: 66%;
+  width: 15px;
+  height: 15px;
+  animation-delay: 300ms;
+}
+
+.celebration > span:nth-child(7) {
+  left: 77%;
+  animation-delay: 70ms;
+}
+
+.celebration > span:nth-child(8) {
+  left: 87%;
+  width: 8px;
+  height: 8px;
+  animation-delay: 220ms;
+}
+
+.celebration > span:nth-child(9) {
+  left: 95%;
+  width: 14px;
+  height: 14px;
+  animation-delay: 140ms;
 }
 
 .progressRing {
@@ -159,6 +268,64 @@
 
 .entryActions {
   display: flex;
+}
+
+@keyframes goal-card-celebration {
+  0%,
+  100% {
+    box-shadow: var(--shadow-card);
+  }
+
+  42% {
+    box-shadow:
+      0 0 0 5px var(--color-primary-soft),
+      0 22px 64px color-mix(in oklch, var(--color-primary) 26%, transparent);
+  }
+}
+
+@keyframes goal-ring-celebration {
+  0% {
+    transform: scale(0.88);
+  }
+
+  48% {
+    filter: drop-shadow(
+      0 0 18px color-mix(in oklch, var(--color-primary) 52%, transparent)
+    );
+    transform: scale(1.12) rotate(5deg);
+  }
+
+  100% {
+    transform: scale(1) rotate(0);
+  }
+}
+
+@keyframes goal-ripple {
+  0% {
+    opacity: 0.55;
+    transform: translate(-50%, -50%) scale(0.72);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(2.1);
+  }
+}
+
+@keyframes hydration-bubble {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.55);
+  }
+
+  18% {
+    opacity: 0.78;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-190px) translateX(12px) scale(1.2);
+  }
 }
 
 @media (max-width: 760px) {

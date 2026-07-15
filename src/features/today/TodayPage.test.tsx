@@ -5,6 +5,10 @@ import { BUILTIN_DRINKS } from '../../domain/builtin-drinks';
 import { createDrinkSnapshot, type HydrationEntry } from '../../domain/models';
 import { TodayPage } from './TodayPage';
 
+const { useEntriesBetweenMock } = vi.hoisted(() => ({
+  useEntriesBetweenMock: vi.fn<() => HydrationEntry[]>(),
+}));
+
 const water = BUILTIN_DRINKS[0]!;
 const entry: HydrationEntry = {
   id: 'entry-today',
@@ -17,8 +21,15 @@ const entry: HydrationEntry = {
   updatedAt: new Date().toISOString(),
 };
 
+const goalEntry: HydrationEntry = {
+  ...entry,
+  id: 'entry-goal',
+  volumeMl: 1_500,
+  effectiveHydrationMl: 1_500,
+};
+
 vi.mock('../../data/hooks', () => ({
-  useEntriesBetween: () => [entry],
+  useEntriesBetween: () => useEntriesBetweenMock(),
   useSettings: () => ({ version: 1, dailyGoalMl: 2_000, theme: 'system' }),
   useDrinks: () => BUILTIN_DRINKS,
 }));
@@ -31,6 +42,8 @@ vi.mock('../../data/repositories', () => ({
 }));
 
 describe('TodayPage', () => {
+  beforeEach(() => useEntriesBetweenMock.mockReturnValue([entry]));
+
   it('рассчитывает дневной прогресс и показывает записи', () => {
     render(<TodayPage />);
 
@@ -43,5 +56,16 @@ describe('TodayPage', () => {
       screen.getByRole('button', { name: 'Добавить запись' }),
     ).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Вода' })).toBeInTheDocument();
+  });
+
+  it('запускает анимацию при переходе через дневную цель', async () => {
+    const { rerender } = render(<TodayPage />);
+
+    expect(screen.queryByTestId('goal-celebration')).not.toBeInTheDocument();
+    useEntriesBetweenMock.mockReturnValue([entry, goalEntry]);
+    rerender(<TodayPage />);
+
+    expect(await screen.findByTestId('goal-celebration')).toBeInTheDocument();
+    expect(screen.getByText('Цель выполнена')).toBeInTheDocument();
   });
 });

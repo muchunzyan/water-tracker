@@ -133,7 +133,9 @@ export function HistoryPage() {
                 ) : null}
               </span>
               <strong>{day.progress}%</strong>
-              <small>{format(day.date, 'EE', { locale: ru })}</small>
+              <small data-testid="weekday-label">
+                {formatWeekdayLabel(day.date)}
+              </small>
             </ShadcnButton>
           ))}
         </div>
@@ -227,6 +229,10 @@ export function HistoryPage() {
 function formatSelectedDate(date: Date) {
   if (isToday(date)) return 'Сегодня';
   return format(date, 'd MMMM, EEEE', { locale: ru });
+}
+
+function formatWeekdayLabel(date: Date) {
+  return ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'][date.getDay()];
 }
 
 function formatMl(value: number) {
