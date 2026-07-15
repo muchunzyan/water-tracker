@@ -46,6 +46,26 @@ describe('DrinksPage', () => {
     expect(headings[0]).toHaveTextContent('Крепкий алкоголь');
   });
 
+  it('фильтрует каталог по названию и очищает запрос', () => {
+    render(<DrinksPage />);
+
+    fireEvent.change(screen.getByRole('searchbox', { name: 'Поиск' }), {
+      target: { value: 'зеленый' },
+    });
+
+    expect(
+      screen.getByRole('heading', { level: 2, name: 'Зелёный чай' }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole('heading', { level: 2, name: /^Вода$/ }),
+    ).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Очистить поиск' }));
+    expect(
+      screen.getByRole('heading', { level: 2, name: /^Вода$/ }),
+    ).toBeInTheDocument();
+  });
+
   it('создаёт пользовательский напиток через форму', async () => {
     render(<DrinksPage />);
 

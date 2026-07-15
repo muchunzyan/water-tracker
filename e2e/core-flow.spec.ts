@@ -24,6 +24,19 @@ test('первый запуск показывает пустой текущий
   await expect(
     page.getByRole('heading', { level: 2, name: 'Вода', exact: true }),
   ).toBeVisible();
+  await page.getByRole('searchbox', { name: 'Поиск' }).fill('МИНЕРАЛЬНАЯ');
+  await expect(
+    page.getByRole('heading', { level: 2, name: 'Минеральная вода' }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole('heading', { level: 2, name: 'Вода', exact: true }),
+  ).toHaveCount(0);
+  await page.getByRole('searchbox', { name: 'Поиск' }).fill('нет такого');
+  await expect(page.getByText('Напитки не найдены')).toBeVisible();
+  await page.getByRole('button', { name: 'Очистить поиск' }).click();
+  await expect(
+    page.getByRole('heading', { level: 2, name: 'Вода', exact: true }),
+  ).toBeVisible();
 });
 
 test('пользователь создаёт напиток и добавляет его в сегодняшний день', async ({

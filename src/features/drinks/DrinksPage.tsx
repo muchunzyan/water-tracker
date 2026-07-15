@@ -17,6 +17,7 @@ import { Spinner } from '../../ui/Spinner/Spinner';
 import { SelectField } from '../../ui/SelectField/SelectField';
 import { TextField } from '../../ui/TextField/TextField';
 import styles from './DrinksPage.module.css';
+import { filterDrinks } from './filter-drinks';
 import {
   SORT_MODES,
   SORT_STORAGE_KEY,
@@ -47,10 +48,11 @@ const ICON_SYMBOLS: Record<DrinkIcon, string> = {
 export function DrinksPage() {
   const drinks = useDrinks();
   const [editingDrink, setEditingDrink] = useState<Drink | null>();
+  const [searchQuery, setSearchQuery] = useState('');
   const [sortMode, setSortMode] = useState<SortMode>(() => getStoredSortMode());
   const sortedDrinks = useMemo(
-    () => sortDrinks(drinks ?? [], sortMode),
-    [drinks, sortMode],
+    () => sortDrinks(filterDrinks(drinks ?? [], searchQuery), sortMode),
+    [drinks, searchQuery, sortMode],
   );
 
   function handleSortChange(value: SortMode) {
@@ -78,6 +80,21 @@ export function DrinksPage() {
 
       {drinks !== undefined && drinks.length > 0 ? (
         <div className={styles.catalogToolbar}>
+          <div className={styles.searchControl}>
+            <TextField
+              autoComplete="off"
+              label="Поиск"
+              onChange={(event) => setSearchQuery(event.target.value)}
+              placeholder="Название напитка"
+              type="search"
+              value={searchQuery}
+            />
+            {searchQuery && sortedDrinks.length > 0 ? (
+              <Button onClick={() => setSearchQuery('')} variant="ghost">
+                Очистить поиск
+              </Button>
+            ) : null}
+          </div>
           <SelectField
             aria-label="Сортировка напитков"
             label="Сортировка"
@@ -109,6 +126,19 @@ export function DrinksPage() {
             description="Создайте первый напиток и задайте его процент гидратации."
             icon={<Icon name="drinks" size={28} />}
             title="Каталог пуст"
+          />
+        </Card>
+      ) : sortedDrinks.length === 0 ? (
+        <Card>
+          <EmptyState
+            action={
+              <Button onClick={() => setSearchQuery('')} variant="secondary">
+                Очистить поиск
+              </Button>
+            }
+            description={`По запросу «${searchQuery.trim()}» ничего не найдено.`}
+            icon={<Icon name="drinks" size={28} />}
+            title="Напитки не найдены"
           />
         </Card>
       ) : (
