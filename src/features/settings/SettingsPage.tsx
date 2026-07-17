@@ -384,13 +384,17 @@ function SettingsContent({ initialSettings }: { initialSettings: Settings }) {
 
       <Card className={styles.section}>
         <div>
-          <h2>Установка на iPhone</h2>
-          <p>После публикации приложение можно запускать с домашнего экрана.</p>
+          <h2>Использование на iPhone</h2>
+          <p>Приложение можно запускать с домашнего экрана</p>
         </div>
         <ol className={styles.instructions}>
-          <li>Откройте приложение в Safari.</li>
-          <li>Нажмите кнопку «Поделиться».</li>
-          <li>Выберите «На экран „Домой“» и подтвердите добавление.</li>
+          <li>
+            Зайдите в Safari на muchunzyan.github.io/water-tracker и нажмите
+            «...»
+          </li>
+          <li>Выберите «Поделиться»</li>
+          <li>Нажмите «Показать больше»</li>
+          <li>Нажмите «Добавить на экран «Домой»»</li>
         </ol>
       </Card>
 
