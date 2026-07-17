@@ -57,6 +57,7 @@ function SelectTrigger({
 function SelectContent({
   className,
   children,
+  header,
   side = 'bottom',
   sideOffset = 4,
   align = 'center',
@@ -67,7 +68,9 @@ function SelectContent({
   Pick<
     SelectPrimitive.Positioner.Props,
     'align' | 'alignOffset' | 'side' | 'sideOffset' | 'alignItemWithTrigger'
-  >) {
+  > & {
+    header?: React.ReactNode;
+  }) {
   return (
     <SelectPrimitive.Portal>
       <SelectPrimitive.Positioner
@@ -88,6 +91,7 @@ function SelectContent({
           {...props}
         >
           <SelectScrollUpButton />
+          {header}
           <SelectPrimitive.List>{children}</SelectPrimitive.List>
           <SelectScrollDownButton />
         </SelectPrimitive.Popup>

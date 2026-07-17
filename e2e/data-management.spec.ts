@@ -48,9 +48,7 @@ test('пользователь редактирует и удаляет собс
 
   const card = page
     .getByRole('heading', { level: 2, name: 'Тархун' })
-    .locator('..')
-    .locator('..')
-    .locator('..');
+    .locator('xpath=ancestor::*[@data-slot="card"][1]');
   await card.getByRole('button', { name: 'Изменить' }).click();
   await page.getByRole('textbox', { name: 'Название' }).fill('Домашний компот');
   await page.getByRole('button', { name: 'Сохранить' }).click();
@@ -61,9 +59,7 @@ test('пользователь редактирует и удаляет собс
   page.once('dialog', (dialog) => dialog.accept());
   const updatedCard = page
     .getByRole('heading', { level: 2, name: 'Домашний компот' })
-    .locator('..')
-    .locator('..')
-    .locator('..');
+    .locator('xpath=ancestor::*[@data-slot="card"][1]');
   await updatedCard.getByRole('button', { name: 'Удалить' }).click();
   await expect(
     page.getByRole('heading', { level: 2, name: 'Домашний компот' }),

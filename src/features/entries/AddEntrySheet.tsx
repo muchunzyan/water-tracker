@@ -17,6 +17,7 @@ import { Spinner } from '../../ui/Spinner/Spinner';
 import { SelectField } from '../../ui/SelectField/SelectField';
 import { TextField } from '../../ui/TextField/TextField';
 import styles from './AddEntrySheet.module.css';
+import { sortDrinksByUsage } from './drink-options';
 import { getEntryDefaults, getQuickVolumes } from './volume-suggestions';
 
 interface AddEntrySheetProps {
@@ -53,10 +54,14 @@ export function AddEntrySheet({ entry, onClose, onSaved }: AddEntrySheetProps) {
     () => getEntryDefaults(entries ?? [], availableDrinks ?? []),
     [availableDrinks, entries],
   );
+  const orderedDrinks = useMemo(
+    () => sortDrinksByUsage(availableDrinks ?? [], entries ?? []),
+    [availableDrinks, entries],
+  );
   const selectedDrink =
-    availableDrinks?.find((drink) => drink.id === selectedDrinkId) ??
-    availableDrinks?.find((drink) => drink.id === entryDefaults.drinkId) ??
-    availableDrinks?.[0];
+    orderedDrinks.find((drink) => drink.id === selectedDrinkId) ??
+    orderedDrinks.find((drink) => drink.id === entryDefaults.drinkId) ??
+    orderedDrinks[0];
   const quickVolumes = useMemo(() => getQuickVolumes(entries ?? []), [entries]);
   const volume =
     volumeOverride ??
@@ -141,9 +146,12 @@ export function AddEntrySheet({ entry, onClose, onSaved }: AddEntrySheetProps) {
           <SelectField
             label="Напиток"
             onValueChange={setSelectedDrinkId}
+            searchable
+            searchLabel="Поиск напитка"
+            searchPlaceholder="Название напитка"
             value={selectedDrink?.id ?? ''}
           >
-            {availableDrinks?.map((drink) => (
+            {orderedDrinks.map((drink) => (
               <option key={drink.id} value={drink.id}>
                 {drink.name} · {drink.hydrationPercent}%
               </option>

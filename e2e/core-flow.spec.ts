@@ -88,6 +88,7 @@ test('пользователь создаёт напиток и добавляе
   await page.getByRole('link', { name: 'Сегодня' }).click();
   await page.getByRole('button', { name: 'Добавить запись' }).click();
   await page.getByRole('combobox', { name: 'Напиток', exact: true }).click();
+  await page.getByRole('searchbox', { name: 'Поиск напитка' }).fill('рой');
   await page.getByRole('option', { name: 'Ройбуш · 85%' }).click();
   await page.getByRole('button', { name: '330 мл' }).click();
   await expect(page.getByText('281 мл', { exact: true })).toBeVisible();

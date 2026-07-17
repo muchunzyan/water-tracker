@@ -40,4 +40,35 @@ describe('SelectField', () => {
     expect(onValueChange).toHaveBeenCalledWith('tea');
     expect(select).toHaveTextContent('Чай');
   });
+
+  it('фильтрует варианты через поиск', async () => {
+    const user = userEvent.setup();
+    render(
+      <SelectField
+        defaultValue="water"
+        label="Напиток"
+        searchable
+        searchLabel="Поиск напитка"
+      >
+        <option value="water">Вода</option>
+        <option value="green-tea">Зелёный чай</option>
+        <option value="coffee">Кофе</option>
+      </SelectField>,
+    );
+
+    const select = screen.getByRole('combobox', { name: 'Напиток' });
+    select.focus();
+    await user.keyboard('{ArrowDown}');
+    await user.type(
+      screen.getByRole('searchbox', { name: 'Поиск напитка' }),
+      'зеленый',
+    );
+
+    expect(
+      screen.getByRole('option', { name: 'Зелёный чай' }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole('option', { name: 'Вода' }),
+    ).not.toBeInTheDocument();
+  });
 });

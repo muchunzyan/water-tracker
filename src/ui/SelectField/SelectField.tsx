@@ -5,6 +5,7 @@ import {
   type ReactElement,
   type ReactNode,
   useId,
+  useState,
 } from 'react';
 
 import {
@@ -41,6 +42,9 @@ interface SelectFieldProps {
   name?: string;
   onValueChange?: (value: string) => void;
   required?: boolean;
+  searchable?: boolean;
+  searchLabel?: string;
+  searchPlaceholder?: string;
   value?: string;
 }
 
@@ -57,8 +61,13 @@ export function SelectField({
   name,
   onValueChange,
   required,
+  searchable = false,
+  searchLabel = 'Поиск',
+  searchPlaceholder = 'Найти',
   value,
 }: SelectFieldProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const generatedId = useId();
   const selectId = id ?? generatedId;
   const descriptionId = error || hint ? `${selectId}-description` : undefined;
@@ -71,6 +80,14 @@ export function SelectField({
     label: option.props.children,
     value: String(option.props.value ?? ''),
   }));
+  const normalizedQuery = normalizeSearchValue(searchQuery);
+  const visibleOptions = normalizedQuery
+    ? options.filter((option) =>
+        normalizeSearchValue(getTextContent(option.props.children)).includes(
+          normalizedQuery,
+        ),
+      )
+    : options;
 
   return (
     <Field className={styles.field} data-invalid={Boolean(error)}>
@@ -80,10 +97,15 @@ export function SelectField({
         disabled={disabled}
         items={items}
         name={name}
+        onOpenChange={(open) => {
+          setIsOpen(open);
+          if (!open) setSearchQuery('');
+        }}
         onValueChange={(nextValue) => {
           if (nextValue !== null) onValueChange?.(nextValue);
         }}
         required={required}
+        open={isOpen}
         value={value}
       >
         <SelectTrigger
@@ -95,8 +117,29 @@ export function SelectField({
         >
           <SelectValue />
         </SelectTrigger>
-        <SelectContent align="start" alignItemWithTrigger={false}>
-          {options.map((option) => {
+        <SelectContent
+          align="start"
+          alignItemWithTrigger={false}
+          header={
+            searchable ? (
+              <div
+                className={styles.search}
+                onPointerDown={(event) => event.stopPropagation()}
+              >
+                <input
+                  aria-label={searchLabel}
+                  autoComplete="off"
+                  onChange={(event) => setSearchQuery(event.target.value)}
+                  onKeyDown={(event) => event.stopPropagation()}
+                  placeholder={searchPlaceholder}
+                  type="search"
+                  value={searchQuery}
+                />
+              </div>
+            ) : undefined
+          }
+        >
+          {visibleOptions.map((option) => {
             const optionValue = String(option.props.value ?? '');
 
             return (
@@ -109,6 +152,11 @@ export function SelectField({
               </SelectItem>
             );
           })}
+          {searchable && visibleOptions.length === 0 ? (
+            <p className={styles.noResults} role="status">
+              Ничего не найдено
+            </p>
+          ) : null}
         </SelectContent>
       </Select>
       {error ? (
@@ -118,4 +166,25 @@ export function SelectField({
       ) : null}
     </Field>
   );
+}
+
+function getTextContent(node: ReactNode): string {
+  return Children.toArray(node)
+    .map((child) =>
+      typeof child === 'string' || typeof child === 'number'
+        ? String(child)
+        : isValidElement<{ children?: ReactNode }>(child)
+          ? getTextContent(child.props.children)
+          : '',
+    )
+    .join(' ');
+}
+
+function normalizeSearchValue(value: string) {
+  return value
+    .trim()
+    .toLocaleLowerCase('ru-RU')
+    .replaceAll('ё', 'е')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
 }
