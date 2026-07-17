@@ -5,6 +5,7 @@ import {
   History,
   House,
   Moon,
+  Smartphone,
   Plus,
   Settings,
   Sun,
@@ -21,6 +22,7 @@ export type IconName =
   | 'history'
   | 'home'
   | 'moon'
+  | 'portrait'
   | 'settings'
   | 'streak'
   | 'sun';
@@ -38,6 +40,7 @@ const icons: Record<IconName, LucideIcon> = {
   history: History,
   home: House,
   moon: Moon,
+  portrait: Smartphone,
   settings: Settings,
   streak: Flame,
   sun: Sun,

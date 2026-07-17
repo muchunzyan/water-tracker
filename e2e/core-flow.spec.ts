@@ -13,6 +13,33 @@ async function openApp(page: Page, path: string) {
   }
 }
 
+test('установленная PWA не показывает интерфейс в горизонтальном режиме', async ({
+  page,
+}, testInfo) => {
+  test.skip(
+    testInfo.project.name !== 'mobile-chrome',
+    'Проверка предназначена для мобильного проекта',
+  );
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, 'standalone', {
+      configurable: true,
+      value: true,
+    });
+  });
+  await page.setViewportSize({ width: 844, height: 390 });
+  await page.goto('/');
+
+  await expect(page.getByTestId('orientation-guard')).toBeVisible();
+  await expect(page.getByText('Поверните телефон')).toBeVisible();
+  await expect(page.locator('meta[name="viewport"]')).toHaveAttribute(
+    'content',
+    'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover',
+  );
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect(page.getByTestId('orientation-guard')).toBeHidden();
+});
+
 test('первый запуск показывает пустой текущий день и встроенные напитки', async ({
   page,
 }) => {

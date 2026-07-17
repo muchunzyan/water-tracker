@@ -58,6 +58,10 @@ html {
   background: var(--color-background);
 }
 
+html.pwa-standalone {
+  touch-action: pan-x pan-y;
+}
+
 body {
   min-width: 320px;
   min-height: 100vh;
