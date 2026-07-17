@@ -37,6 +37,19 @@ export function OrientationGuard() {
 
       if (nextIsStandalone) void requestPortraitOrientationLock();
     };
+
+    updateStandaloneMode();
+    standaloneQuery.addEventListener('change', updateStandaloneMode);
+
+    return () => {
+      standaloneQuery.removeEventListener('change', updateStandaloneMode);
+      document.documentElement.classList.remove('pwa-standalone');
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isStandalone) return;
+
     const preventGesture = (event: Event) => event.preventDefault();
     const preventMultiTouch = (event: TouchEvent) => {
       if (event.touches.length > 1) event.preventDefault();
@@ -47,8 +60,6 @@ export function OrientationGuard() {
       }
     };
 
-    updateStandaloneMode();
-    standaloneQuery.addEventListener('change', updateStandaloneMode);
     document.addEventListener('gesturestart', preventGesture, {
       passive: false,
     });
@@ -62,15 +73,13 @@ export function OrientationGuard() {
     window.addEventListener('orientationchange', restorePortrait);
 
     return () => {
-      standaloneQuery.removeEventListener('change', updateStandaloneMode);
       document.removeEventListener('gesturestart', preventGesture);
       document.removeEventListener('gesturechange', preventGesture);
       document.removeEventListener('touchmove', preventMultiTouch);
       document.removeEventListener('visibilitychange', restorePortrait);
       window.removeEventListener('orientationchange', restorePortrait);
-      document.documentElement.classList.remove('pwa-standalone');
     };
-  }, []);
+  }, [isStandalone]);
 
   if (!isStandalone) return null;
 

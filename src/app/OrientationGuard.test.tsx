@@ -37,6 +37,9 @@ describe('OrientationGuard', () => {
 
     expect(screen.queryByTestId('orientation-guard')).not.toBeInTheDocument();
     expect(document.documentElement).not.toHaveClass('pwa-standalone');
+
+    const gesture = new Event('gesturestart', { cancelable: true });
+    expect(document.dispatchEvent(gesture)).toBe(true);
   });
 
   it('в PWA включает защиту от масштабирования и портретный fallback', () => {
