@@ -18,6 +18,7 @@ export default defineConfig(({ mode }) => {
         registerType: 'prompt',
         includeAssets: [
           'apple-touch-icon.png',
+          'apple-touch-icon.svg',
           'icon.svg',
           'icon-maskable.svg',
         ],
