@@ -176,15 +176,15 @@ function DrinkCard({
         <DrinkIconGlyph name={drink.icon} size={30} />
       </div>
       <div className={styles.drinkInfo}>
-        <div className={styles.drinkTitleRow}>
-          <h2>{drink.name}</h2>
+        <h2>{drink.name}</h2>
+        <div className={styles.drinkDetailsRow}>
+          <p>
+            {drink.hydrationPercent}% гидратации · {drink.standardVolumeMl} мл
+          </p>
           {drink.isBuiltin ? (
             <span className={styles.badge}>Встроенный</span>
           ) : null}
         </div>
-        <p>
-          {drink.hydrationPercent}% гидратации · {drink.standardVolumeMl} мл
-        </p>
         {error ? <p className={styles.error}>{error}</p> : null}
       </div>
       <div className={styles.actions}>
