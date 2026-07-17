@@ -54,6 +54,7 @@ describe('TodayPage', () => {
     expect(screen.getByText(/500 из 2.000 мл/)).toBeInTheDocument();
     expect(screen.getByText('Осталось 1 500 мл')).toBeInTheDocument();
     expect(screen.getByText('Серия: 0 дней')).toBeInTheDocument();
+    expect(screen.getByLabelText('Записей за сегодня: 1')).toBeInTheDocument();
     expect(
       screen.getByRole('button', { name: 'Добавить запись' }),
     ).toBeInTheDocument();

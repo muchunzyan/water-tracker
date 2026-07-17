@@ -186,7 +186,12 @@ export function TodayPage() {
         >
           <div className={styles.sectionHeader}>
             <h2 id="recent-entries-title">Последние записи</h2>
-            <span>{entries.length}</span>
+            <span
+              aria-label={`Записей за сегодня: ${entries.length}`}
+              className={styles.entryCount}
+            >
+              {entries.length}
+            </span>
           </div>
           <div className={styles.entries}>
             {entries.slice(0, 6).map((entry) => (
