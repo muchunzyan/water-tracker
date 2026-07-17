@@ -154,7 +154,7 @@ function SettingsContent({ initialSettings }: { initialSettings: Settings }) {
   async function handleRestoreBuiltins() {
     if (
       !window.confirm(
-        'Восстановить исходные названия, порции и гидратацию всех встроенных напитков?',
+        'Восстановить исходные названия и гидратацию всех встроенных напитков?',
       )
     ) {
       return;
@@ -333,7 +333,7 @@ function SettingsContent({ initialSettings }: { initialSettings: Settings }) {
       <Card className={styles.linkCard}>
         <div>
           <h2>Каталог напитков</h2>
-          <p>Создавайте напитки и настраивайте их порции и гидратацию.</p>
+          <p>Создавайте напитки и настраивайте их гидратацию.</p>
         </div>
         <Link to="/drinks">
           Управлять напитками <span aria-hidden="true">→</span>

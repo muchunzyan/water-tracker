@@ -49,7 +49,7 @@ export function DrinksPage() {
           <p className={styles.eyebrow}>Каталог</p>
           <h1 className={styles.title}>Напитки</h1>
           <p className={styles.description}>
-            Настройте порции и гидратацию напитков, которые вы пьёте чаще всего.
+            Настройте гидратацию напитков, которые вы пьёте чаще всего.
           </p>
         </div>
         <Button
@@ -178,9 +178,7 @@ function DrinkCard({
       <div className={styles.drinkInfo}>
         <h2>{drink.name}</h2>
         <div className={styles.drinkDetailsRow}>
-          <p>
-            {drink.hydrationPercent}% гидратации · {drink.standardVolumeMl} мл
-          </p>
+          <p>{drink.hydrationPercent}% гидратации</p>
           {drink.isBuiltin ? (
             <span className={styles.badge}>Встроенный</span>
           ) : null}
@@ -210,9 +208,6 @@ function DrinkEditor({
   const [hydrationPercent, setHydrationPercent] = useState(
     String(drink?.hydrationPercent ?? 100),
   );
-  const [standardVolumeMl, setStandardVolumeMl] = useState(
-    String(drink?.standardVolumeMl ?? 250),
-  );
   const [color, setColor] = useState(drink?.color ?? '#39BFC0');
   const [icon, setIcon] = useState<DrinkIcon>(drink?.icon ?? 'custom');
   const [error, setError] = useState('');
@@ -225,7 +220,6 @@ function DrinkEditor({
       id: drink?.id ?? crypto.randomUUID(),
       name,
       hydrationPercent: Number(hydrationPercent),
-      standardVolumeMl: Number(standardVolumeMl),
       color,
       icon,
       isBuiltin: drink?.isBuiltin ?? false,
@@ -272,28 +266,16 @@ function DrinkEditor({
           required
           value={name}
         />
-        <div className={styles.formRow}>
-          <TextField
-            inputMode="numeric"
-            label="Гидратация, %"
-            max={150}
-            min={-500}
-            onChange={(event) => setHydrationPercent(event.target.value)}
-            required
-            type="number"
-            value={hydrationPercent}
-          />
-          <TextField
-            inputMode="numeric"
-            label="Стандартная порция, мл"
-            max={2000}
-            min={50}
-            onChange={(event) => setStandardVolumeMl(event.target.value)}
-            required
-            type="number"
-            value={standardVolumeMl}
-          />
-        </div>
+        <TextField
+          inputMode="numeric"
+          label="Гидратация, %"
+          max={150}
+          min={-500}
+          onChange={(event) => setHydrationPercent(event.target.value)}
+          required
+          type="number"
+          value={hydrationPercent}
+        />
         <div className={styles.formRow}>
           <fieldset className={styles.iconPicker}>
             <legend>Иконка</legend>

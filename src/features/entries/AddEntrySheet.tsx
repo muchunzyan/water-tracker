@@ -41,7 +41,6 @@ export function AddEntrySheet({ entry, onClose, onSaved }: AddEntrySheetProps) {
         ? {
             id: entry.drinkId,
             ...entry.drink,
-            standardVolumeMl: entry.volumeMl,
             isBuiltin: false,
             createdAt: entry.createdAt,
             updatedAt: entry.updatedAt,

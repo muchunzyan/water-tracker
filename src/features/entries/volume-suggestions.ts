@@ -59,7 +59,7 @@ export function getEntryDefaults(
       lastEntry.volumeMl >= 1 &&
       lastEntry.volumeMl <= 5_000
         ? lastEntry.volumeMl
-        : (selectedDrink?.standardVolumeMl ?? 250),
+        : 250,
   };
 }
 

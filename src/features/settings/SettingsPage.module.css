@@ -156,15 +156,6 @@
   line-height: 1.7;
 }
 
-.instructions li {
-  padding-left: var(--space-1);
-}
-
-.instructions li::marker {
-  color: var(--color-text);
-  font-weight: 700;
-}
-
 .backupActions {
   display: grid;
   grid-template-columns: 1fr 1fr;

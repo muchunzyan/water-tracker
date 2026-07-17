@@ -36,7 +36,6 @@ export const drinkSnapshotSchema = z.object({
 
 export const drinkSchema = drinkSnapshotSchema.extend({
   id: identifierSchema,
-  standardVolumeMl: z.number().int().min(50).max(2_000),
   isBuiltin: z.boolean(),
   createdAt: timestampSchema,
   updatedAt: timestampSchema,

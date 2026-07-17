@@ -28,7 +28,6 @@ describe('backup', () => {
       id: 'custom-backup',
       name: 'Морс',
       hydrationPercent: 90,
-      standardVolumeMl: 250,
       color: '#D45565',
       icon: 'juice',
       isBuiltin: false,

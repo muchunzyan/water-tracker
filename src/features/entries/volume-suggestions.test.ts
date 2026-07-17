@@ -48,7 +48,7 @@ describe('volume suggestions', () => {
     });
   });
 
-  it('использует воду и стандартную порцию без истории', () => {
+  it('использует воду и начальный объём без истории', () => {
     expect(getEntryDefaults([], [tea, water])).toEqual({
       drinkId: water.id,
       volumeMl: 250,

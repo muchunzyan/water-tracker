@@ -77,9 +77,6 @@ test('пользователь создаёт напиток и добавляе
   await page.getByRole('button', { name: 'Новый напиток' }).click();
   await page.getByRole('textbox', { name: 'Название' }).fill('Ройбуш');
   await page.getByRole('spinbutton', { name: 'Гидратация, %' }).fill('85');
-  await page
-    .getByRole('spinbutton', { name: 'Стандартная порция, мл' })
-    .fill('300');
   await page.getByRole('button', { name: 'Создать' }).click();
 
   await expect(

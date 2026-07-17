@@ -35,7 +35,7 @@ describe('local database', () => {
   it('создаёт схему первой версии и заполняет начальные данные', async () => {
     await database.open();
 
-    expect(database.verno).toBe(4);
+    expect(database.verno).toBe(5);
     expect(await database.drinks.count()).toBe(BUILTIN_DRINKS.length);
     expect(await new SettingsRepository(database).get()).toEqual(
       DEFAULT_SETTINGS,
@@ -120,6 +120,37 @@ describe('local database', () => {
     expect(await database.drinks.get('builtin-champagne')).toBeDefined();
   });
 
+  it('удаляет стандартную порцию при миграции базы версии 4', async () => {
+    database.close();
+    await database.delete();
+    const legacy = new Dexie(database.name);
+    legacy.version(4).stores({
+      drinks: 'id, isBuiltin, name, updatedAt',
+      entries: 'id, drinkId, consumedAt, createdAt',
+      settings: 'id',
+    });
+    await legacy.open();
+    await legacy.table('drinks').add({
+      id: 'custom-legacy-serving',
+      name: 'Морс',
+      hydrationPercent: 90,
+      standardVolumeMl: 300,
+      color: '#D45565',
+      icon: 'juice',
+      isBuiltin: false,
+      createdAt: '2026-07-11T12:00:00.000Z',
+      updatedAt: '2026-07-11T12:00:00.000Z',
+    });
+    legacy.close();
+
+    database = new WaterTrackerDatabase(database.name);
+    await database.open();
+
+    expect(
+      await database.drinks.get('custom-legacy-serving'),
+    ).not.toHaveProperty('standardVolumeMl');
+  });
+
   it('сохраняет пользовательский напиток после повторного открытия базы', async () => {
     const repository = new DrinkRepository(database);
     const now = '2026-07-11T12:00:00.000Z';
@@ -128,7 +159,6 @@ describe('local database', () => {
       id: 'custom-cocoa',
       name: 'Какао',
       hydrationPercent: 85,
-      standardVolumeMl: 250,
       color: '#A56A43',
       icon: 'custom',
       isBuiltin: false,
@@ -203,7 +233,6 @@ describe('local database', () => {
       id: 'custom-reset',
       name: 'Лимонад',
       hydrationPercent: 80,
-      standardVolumeMl: 300,
       color: '#E1B941',
       icon: 'custom',
       isBuiltin: false,

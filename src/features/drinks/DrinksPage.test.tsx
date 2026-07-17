@@ -90,7 +90,6 @@ describe('DrinksPage', () => {
         expect.objectContaining({
           name: 'Какао',
           hydrationPercent: 100,
-          standardVolumeMl: 250,
           isBuiltin: false,
         }),
       ),
