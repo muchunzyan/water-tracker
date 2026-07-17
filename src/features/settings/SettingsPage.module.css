@@ -151,7 +151,18 @@
   padding-left: var(--space-6);
   color: var(--color-text-muted);
   font-size: var(--font-size-sm);
+  list-style: decimal;
+  list-style-position: outside;
   line-height: 1.7;
+}
+
+.instructions li {
+  padding-left: var(--space-1);
+}
+
+.instructions li::marker {
+  color: var(--color-text);
+  font-weight: 700;
 }
 
 .backupActions {
