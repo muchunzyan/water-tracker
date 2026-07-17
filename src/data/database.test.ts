@@ -35,7 +35,7 @@ describe('local database', () => {
   it('создаёт схему первой версии и заполняет начальные данные', async () => {
     await database.open();
 
-    expect(database.verno).toBe(3);
+    expect(database.verno).toBe(4);
     expect(await database.drinks.count()).toBe(BUILTIN_DRINKS.length);
     expect(await new SettingsRepository(database).get()).toEqual(
       DEFAULT_SETTINGS,
@@ -59,32 +59,47 @@ describe('local database', () => {
     await database.open();
 
     expect(await database.drinks.count()).toBe(
-      1 + NEW_BUILTIN_DRINKS_V2.length,
+      BUILTIN_DRINKS.filter(
+        (drink) =>
+          ![
+            'builtin-coffee',
+            'builtin-milk',
+            'builtin-juice',
+            'builtin-soda',
+          ].includes(drink.id),
+      ).length,
     );
-    expect(await database.drinks.get('builtin-sparkling-water')).toBeDefined();
+    expect(
+      await database.drinks.get('builtin-sparkling-water'),
+    ).toBeUndefined();
+    expect(await database.drinks.get('builtin-champagne')).toBeDefined();
   });
 
-  it('обновляет иконки неизменённых встроенных напитков при миграции', async () => {
+  it('обновляет каталог V4 и сохраняет пользовательские изменения', async () => {
     database.close();
     await database.delete();
-    const sparkling = BUILTIN_DRINKS.find(
+    const sparkling = NEW_BUILTIN_DRINKS_V2.find(
       (drink) => drink.id === 'builtin-sparkling-water',
     )!;
-    const energy = BUILTIN_DRINKS.find(
+    const oldEnergy = NEW_BUILTIN_DRINKS_V2.find(
       (drink) => drink.id === 'builtin-energy-drink',
     )!;
+    const oldLatte = NEW_BUILTIN_DRINKS_V2.find(
+      (drink) => drink.id === 'builtin-latte',
+    )!;
     const legacy = new Dexie(database.name);
-    legacy.version(2).stores({
+    legacy.version(3).stores({
       drinks: 'id, isBuiltin, name, updatedAt',
       entries: 'id, drinkId, consumedAt, createdAt',
       settings: 'id',
     });
     await legacy.open();
     await legacy.table('drinks').bulkAdd([
-      { ...sparkling, icon: 'water' },
+      sparkling,
+      oldEnergy,
       {
-        ...energy,
-        icon: 'custom',
+        ...oldLatte,
+        name: 'Мой латте',
         updatedAt: '2026-07-16T12:00:00.000Z',
       },
     ]);
@@ -93,12 +108,16 @@ describe('local database', () => {
     database = new WaterTrackerDatabase(database.name);
     await database.open();
 
-    expect(await database.drinks.get(sparkling.id)).toMatchObject({
-      icon: 'sparkling',
+    expect(await database.drinks.get(sparkling.id)).toBeUndefined();
+    expect(await database.drinks.get(oldEnergy.id)).toMatchObject({
+      name: 'Энергетик',
+      hydrationPercent: 55,
     });
-    expect(await database.drinks.get(energy.id)).toMatchObject({
-      icon: 'custom',
+    expect(await database.drinks.get(oldLatte.id)).toMatchObject({
+      name: 'Мой латте',
+      hydrationPercent: 90,
     });
+    expect(await database.drinks.get('builtin-champagne')).toBeDefined();
   });
 
   it('сохраняет пользовательский напиток после повторного открытия базы', async () => {

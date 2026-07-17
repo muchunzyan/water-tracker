@@ -3,7 +3,7 @@ export function calculateProgressPercent(
   goalMl: number,
 ) {
   if (goalMl <= 0) return 0;
-  return Math.floor((effectiveHydrationMl / goalMl) * 100);
+  return Math.max(Math.floor((effectiveHydrationMl / goalMl) * 100), 0);
 }
 
 export function calculateRemainingMl(

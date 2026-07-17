@@ -1,4 +1,10 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
 
@@ -47,7 +53,7 @@ describe('DrinksPage', () => {
     );
 
     const headings = screen.getAllByRole('heading', { level: 2 });
-    expect(headings[0]).toHaveTextContent('Крепкий алкоголь');
+    expect(headings[0]).toHaveTextContent('Байцзю');
   });
 
   it('фильтрует каталог по названию и очищает запрос', () => {
@@ -100,7 +106,11 @@ describe('DrinksPage', () => {
     });
     const energyIcon = screen.getByRole('button', { name: 'Энергетик' });
     expect(energyIcon).toHaveAttribute('aria-pressed', 'false');
-    expect(screen.queryByText('Энергетик')).not.toBeInTheDocument();
+    expect(
+      within(screen.getByRole('group', { name: 'Иконка' })).queryByText(
+        'Энергетик',
+      ),
+    ).not.toBeInTheDocument();
     fireEvent.click(energyIcon);
     expect(energyIcon).toHaveAttribute('aria-pressed', 'true');
     fireEvent.click(screen.getByRole('button', { name: 'Создать' }));

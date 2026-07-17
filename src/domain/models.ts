@@ -22,7 +22,7 @@ export const DRINK_ICONS = [
 
 const identifierSchema = z.string().trim().min(1).max(100);
 const timestampSchema = z.iso.datetime({ offset: true });
-const hydrationPercentSchema = z.number().int().min(0).max(100);
+const hydrationPercentSchema = z.number().int().min(-500).max(150);
 const colorSchema = z
   .string()
   .regex(/^#[0-9a-f]{6}$/i, 'Ожидается цвет в формате #RRGGBB');
@@ -48,7 +48,7 @@ export const hydrationEntrySchema = z
     drinkId: identifierSchema,
     drink: drinkSnapshotSchema,
     volumeMl: z.number().int().min(1).max(5_000),
-    effectiveHydrationMl: z.number().int().min(0).max(5_000),
+    effectiveHydrationMl: z.number().int().min(-25_000).max(7_500),
     consumedAt: timestampSchema,
     createdAt: timestampSchema,
     updatedAt: timestampSchema,

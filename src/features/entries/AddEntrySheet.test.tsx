@@ -66,7 +66,7 @@ describe('AddEntrySheet', () => {
     render(<AddEntrySheet onClose={vi.fn()} onSaved={vi.fn()} />);
 
     expect(screen.getByRole('combobox', { name: 'Напиток' })).toHaveTextContent(
-      'Чай · 95%',
+      `${tea.name} · ${tea.hydrationPercent}%`,
     );
     expect(screen.getByRole('spinbutton', { name: 'Выпито, мл' })).toHaveValue(
       280,

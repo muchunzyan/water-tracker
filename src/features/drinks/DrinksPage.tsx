@@ -276,8 +276,8 @@ function DrinkEditor({
           <TextField
             inputMode="numeric"
             label="Гидратация, %"
-            max={100}
-            min={0}
+            max={150}
+            min={-500}
             onChange={(event) => setHydrationPercent(event.target.value)}
             required
             type="number"

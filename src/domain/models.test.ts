@@ -12,6 +12,7 @@ describe('calculateEffectiveHydrationMl', () => {
   it('рассчитывает эффективную гидратацию и округляет до миллилитра', () => {
     expect(calculateEffectiveHydrationMl(300, 80)).toBe(240);
     expect(calculateEffectiveHydrationMl(333, 95)).toBe(316);
+    expect(calculateEffectiveHydrationMl(50, -318)).toBe(-159);
   });
 });
 
@@ -19,8 +20,29 @@ describe('domain schemas', () => {
   const water = BUILTIN_DRINKS[0]!;
 
   it('валидирует все встроенные напитки', () => {
+    expect(BUILTIN_DRINKS).toHaveLength(116);
+    expect(new Set(BUILTIN_DRINKS.map((drink) => drink.id)).size).toBe(116);
     expect(
       BUILTIN_DRINKS.every((drink) => drinkSchema.safeParse(drink).success),
+    ).toBe(true);
+  });
+
+  it('валидирует отрицательную гидратацию алкогольного напитка', () => {
+    const spirit = BUILTIN_DRINKS.find(
+      (drink) => drink.id === 'builtin-spirits',
+    )!;
+
+    expect(
+      hydrationEntrySchema.safeParse({
+        id: 'entry-spirit',
+        drinkId: spirit.id,
+        drink: createDrinkSnapshot(spirit),
+        volumeMl: 50,
+        effectiveHydrationMl: -159,
+        consumedAt: '2026-07-17T12:00:00.000+03:00',
+        createdAt: '2026-07-17T12:00:00.000+03:00',
+        updatedAt: '2026-07-17T12:00:00.000+03:00',
+      }).success,
     ).toBe(true);
   });
 

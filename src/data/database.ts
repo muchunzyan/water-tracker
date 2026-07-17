@@ -3,6 +3,8 @@ import Dexie, { type EntityTable } from 'dexie';
 import {
   BUILTIN_DRINKS,
   NEW_BUILTIN_DRINKS_V2,
+  PREVIOUS_BUILTIN_IDS_V3,
+  PREVIOUS_BUILTIN_TIMESTAMPS,
 } from '../domain/builtin-drinks';
 import type { Drink, HydrationEntry, Settings } from '../domain/models';
 
@@ -61,6 +63,38 @@ export class WaterTrackerDatabase extends Dexie {
           ) {
             await drinks.put({ ...stored, icon: definition.icon });
           }
+        }
+      });
+
+    this.version(4)
+      .stores({
+        drinks: 'id, isBuiltin, name, updatedAt',
+        entries: 'id, drinkId, consumedAt, createdAt',
+        settings: 'id',
+      })
+      .upgrade(async (transaction) => {
+        const drinks = transaction.table<Drink, string>('drinks');
+        const definitions = new Map(
+          BUILTIN_DRINKS.map((drink) => [drink.id, drink]),
+        );
+        const storedBuiltins = (await drinks.toArray()).filter(
+          (drink) => drink.isBuiltin,
+        );
+
+        for (const stored of storedBuiltins) {
+          if (!PREVIOUS_BUILTIN_TIMESTAMPS.has(stored.updatedAt)) continue;
+
+          const definition = definitions.get(stored.id);
+          if (definition) await drinks.put(definition);
+          else await drinks.delete(stored.id);
+        }
+
+        for (const definition of BUILTIN_DRINKS) {
+          if (await drinks.get(definition.id)) continue;
+
+          // Отсутствующий старый ID означает, что пользователь ранее удалил его.
+          if (PREVIOUS_BUILTIN_IDS_V3.has(definition.id)) continue;
+          await drinks.add(definition);
         }
       });
 
