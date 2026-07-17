@@ -17,7 +17,7 @@ import { Spinner } from '../../ui/Spinner/Spinner';
 import { SelectField } from '../../ui/SelectField/SelectField';
 import { TextField } from '../../ui/TextField/TextField';
 import styles from './AddEntrySheet.module.css';
-import { getDefaultVolume, getQuickVolumes } from './volume-suggestions';
+import { getEntryDefaults, getQuickVolumes } from './volume-suggestions';
 
 interface AddEntrySheetProps {
   entry?: HydrationEntry | undefined;
@@ -34,32 +34,33 @@ export function AddEntrySheet({ entry, onClose, onSaved }: AddEntrySheetProps) {
   );
   const [error, setError] = useState('');
   const [isSaving, setIsSaving] = useState(false);
-  const historicalDrink: Drink | undefined =
-    entry && drinks && !drinks.some((drink) => drink.id === entry.drinkId)
-      ? {
-          id: entry.drinkId,
-          ...entry.drink,
-          standardVolumeMl: entry.volumeMl,
-          isBuiltin: false,
-          createdAt: entry.createdAt,
-          updatedAt: entry.updatedAt,
-        }
-      : undefined;
-  const availableDrinks = historicalDrink
-    ? [historicalDrink, ...(drinks ?? [])]
-    : drinks;
+  const availableDrinks = useMemo(() => {
+    const historicalDrink: Drink | undefined =
+      entry && drinks && !drinks.some((drink) => drink.id === entry.drinkId)
+        ? {
+            id: entry.drinkId,
+            ...entry.drink,
+            standardVolumeMl: entry.volumeMl,
+            isBuiltin: false,
+            createdAt: entry.createdAt,
+            updatedAt: entry.updatedAt,
+          }
+        : undefined;
+
+    return historicalDrink ? [historicalDrink, ...(drinks ?? [])] : drinks;
+  }, [drinks, entry]);
+  const entryDefaults = useMemo(
+    () => getEntryDefaults(entries ?? [], availableDrinks ?? []),
+    [availableDrinks, entries],
+  );
   const selectedDrink =
     availableDrinks?.find((drink) => drink.id === selectedDrinkId) ??
-    availableDrinks?.find((drink) => drink.id === 'builtin-water') ??
+    availableDrinks?.find((drink) => drink.id === entryDefaults.drinkId) ??
     availableDrinks?.[0];
   const quickVolumes = useMemo(() => getQuickVolumes(entries ?? []), [entries]);
   const volume =
     volumeOverride ??
-    String(
-      selectedDrink
-        ? getDefaultVolume(entries ?? [], selectedDrink)
-        : (entry?.volumeMl ?? 250),
-    );
+    String(selectedDrink ? entryDefaults.volumeMl : (entry?.volumeMl ?? 250));
   const volumeMl = Number(volume);
   const isValidVolume =
     Number.isInteger(volumeMl) && volumeMl >= 1 && volumeMl <= 5_000;

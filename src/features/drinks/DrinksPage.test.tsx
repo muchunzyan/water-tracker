@@ -90,4 +90,25 @@ describe('DrinksPage', () => {
       ),
     );
   });
+
+  it('выбирает иконку в визуальной сетке без текстовых подписей', async () => {
+    render(<DrinksPage />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Новый напиток' }));
+    fireEvent.change(screen.getByRole('textbox', { name: 'Название' }), {
+      target: { value: 'Изотоник' },
+    });
+    const energyIcon = screen.getByRole('button', { name: 'Энергетик' });
+    expect(energyIcon).toHaveAttribute('aria-pressed', 'false');
+    expect(screen.queryByText('Энергетик')).not.toBeInTheDocument();
+    fireEvent.click(energyIcon);
+    expect(energyIcon).toHaveAttribute('aria-pressed', 'true');
+    fireEvent.click(screen.getByRole('button', { name: 'Создать' }));
+
+    await waitFor(() =>
+      expect(save).toHaveBeenCalledWith(
+        expect.objectContaining({ name: 'Изотоник', icon: 'energy' }),
+      ),
+    );
+  });
 });

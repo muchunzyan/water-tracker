@@ -44,6 +44,26 @@ export class WaterTrackerDatabase extends Dexie {
         }
       });
 
+    this.version(3)
+      .stores({
+        drinks: 'id, isBuiltin, name, updatedAt',
+        entries: 'id, drinkId, consumedAt, createdAt',
+        settings: 'id',
+      })
+      .upgrade(async (transaction) => {
+        const drinks = transaction.table<Drink, string>('drinks');
+        for (const definition of BUILTIN_DRINKS) {
+          const stored = await drinks.get(definition.id);
+          if (
+            stored?.isBuiltin &&
+            stored.updatedAt === definition.updatedAt &&
+            stored.icon !== definition.icon
+          ) {
+            await drinks.put({ ...stored, icon: definition.icon });
+          }
+        }
+      });
+
     this.on('populate', async () => {
       await this.drinks.bulkAdd([...BUILTIN_DRINKS]);
       await this.settings.add({ id: 'settings', ...DEFAULT_SETTINGS });

@@ -4,11 +4,19 @@ export const THEME_PREFERENCES = ['system', 'light', 'dark'] as const;
 export const ACTIVITY_LEVELS = ['low', 'moderate', 'high'] as const;
 export const DRINK_ICONS = [
   'water',
+  'sparkling',
   'tea',
   'coffee',
   'milk',
   'juice',
   'soda',
+  'sports',
+  'energy',
+  'cocktail',
+  'broth',
+  'beer',
+  'wine',
+  'kvass',
   'custom',
 ] as const;
 

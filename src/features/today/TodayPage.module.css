@@ -192,6 +192,18 @@
   font-weight: 750;
 }
 
+.summary .streak {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--color-text-muted);
+  font-weight: 700;
+}
+
+.streak svg {
+  color: var(--color-primary);
+}
+
 .notification,
 .error {
   margin: 0;

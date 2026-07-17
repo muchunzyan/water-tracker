@@ -13,6 +13,8 @@ import { Button } from '../../ui/Button/Button';
 import { Card } from '../../ui/Card/Card';
 import { EmptyState } from '../../ui/EmptyState/EmptyState';
 import { Icon } from '../../ui/Icon/Icon';
+import { DrinkIcon as DrinkIconGlyph } from '../../ui/DrinkIcon/DrinkIcon';
+import { DRINK_ICON_LABELS } from '../../ui/DrinkIcon/drink-icon-labels';
 import { Spinner } from '../../ui/Spinner/Spinner';
 import { SelectField } from '../../ui/SelectField/SelectField';
 import { TextField } from '../../ui/TextField/TextField';
@@ -24,26 +26,6 @@ import {
   sortDrinks,
   type SortMode,
 } from './sort-drinks';
-
-const ICON_LABELS: Record<DrinkIcon, string> = {
-  water: 'Вода',
-  tea: 'Чай',
-  coffee: 'Кофе',
-  milk: 'Молоко',
-  juice: 'Сок',
-  soda: 'Газировка',
-  custom: 'Другой напиток',
-};
-
-const ICON_SYMBOLS: Record<DrinkIcon, string> = {
-  water: '💧',
-  tea: '🍵',
-  coffee: '☕',
-  milk: '🥛',
-  juice: '🍊',
-  soda: '🥤',
-  custom: '🫗',
-};
 
 export function DrinksPage() {
   const drinks = useDrinks();
@@ -191,7 +173,7 @@ function DrinkCard({
         className={styles.drinkIcon}
         style={{ backgroundColor: `${drink.color}24`, color: drink.color }}
       >
-        {ICON_SYMBOLS[drink.icon]}
+        <DrinkIconGlyph name={drink.icon} size={30} />
       </div>
       <div className={styles.drinkInfo}>
         <div className={styles.drinkTitleRow}>
@@ -313,17 +295,23 @@ function DrinkEditor({
           />
         </div>
         <div className={styles.formRow}>
-          <SelectField
-            label="Иконка"
-            value={icon}
-            onValueChange={(value) => setIcon(value as DrinkIcon)}
-          >
-            {DRINK_ICONS.map((value) => (
-              <option key={value} value={value}>
-                {ICON_SYMBOLS[value]} {ICON_LABELS[value]}
-              </option>
-            ))}
-          </SelectField>
+          <fieldset className={styles.iconPicker}>
+            <legend>Иконка</legend>
+            <div>
+              {DRINK_ICONS.map((value) => (
+                <button
+                  aria-label={DRINK_ICON_LABELS[value]}
+                  aria-pressed={icon === value}
+                  key={value}
+                  onClick={() => setIcon(value)}
+                  title={DRINK_ICON_LABELS[value]}
+                  type="button"
+                >
+                  <DrinkIconGlyph name={value} size={26} />
+                </button>
+              ))}
+            </div>
+          </fieldset>
           <TextField
             className={styles.colorInput}
             label="Цвет"

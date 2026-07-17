@@ -1,6 +1,7 @@
 import {
   CupSoda,
   Droplet,
+  Flame,
   History,
   House,
   Moon,
@@ -21,6 +22,7 @@ export type IconName =
   | 'home'
   | 'moon'
   | 'settings'
+  | 'streak'
   | 'sun';
 
 interface IconProps extends Omit<LucideProps, 'ref'> {
@@ -37,6 +39,7 @@ const icons: Record<IconName, LucideIcon> = {
   home: House,
   moon: Moon,
   settings: Settings,
+  streak: Flame,
   sun: Sun,
 };
 

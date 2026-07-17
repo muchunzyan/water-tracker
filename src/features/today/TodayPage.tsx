@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { useEntriesBetween, useSettings } from '../../data/hooks';
+import { useEntries, useEntriesBetween, useSettings } from '../../data/hooks';
 import { entryRepository } from '../../data/repositories';
 import type { HydrationEntry } from '../../domain/models';
 import {
@@ -15,11 +15,16 @@ import { Icon } from '../../ui/Icon/Icon';
 import { Spinner } from '../../ui/Spinner/Spinner';
 import { AddEntrySheet } from '../entries/AddEntrySheet';
 import { getLocalDayRange } from './date-range';
+import {
+  calculateHydrationStreak,
+  formatHydrationStreak,
+} from './hydration-streak';
 import styles from './TodayPage.module.css';
 
 export function TodayPage() {
   const range = useMemo(() => getLocalDayRange(new Date()), []);
   const entries = useEntriesBetween(range.startInclusive, range.endExclusive);
+  const allEntries = useEntries();
   const settings = useSettings();
   const [editorEntry, setEditorEntry] = useState<HydrationEntry | null>();
   const [notification, setNotification] = useState('');
@@ -34,6 +39,7 @@ export function TodayPage() {
   const progress = calculateProgressPercent(effectiveHydrationMl, goalMl);
   const visualProgress = Math.min(progress, 100);
   const remainingMl = calculateRemainingMl(effectiveHydrationMl, goalMl);
+  const hydrationStreak = calculateHydrationStreak(allEntries ?? [], goalMl);
   const isHydrationLoaded = entries !== undefined && settings !== undefined;
 
   useEffect(() => {
@@ -125,6 +131,13 @@ export function TodayPage() {
             {remainingMl > 0
               ? `Осталось ${formatMl(remainingMl)} мл`
               : 'Цель выполнена'}
+          </p>
+          <p
+            aria-label={`Серия выполненной цели: ${formatHydrationStreak(hydrationStreak)}`}
+            className={styles.streak}
+          >
+            <Icon name="streak" size={16} />
+            Серия: {formatHydrationStreak(hydrationStreak)}
           </p>
         </div>
         <Button

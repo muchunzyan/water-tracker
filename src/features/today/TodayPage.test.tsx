@@ -30,6 +30,7 @@ const goalEntry: HydrationEntry = {
 
 vi.mock('../../data/hooks', () => ({
   useEntriesBetween: () => useEntriesBetweenMock(),
+  useEntries: () => useEntriesBetweenMock(),
   useSettings: () => ({ version: 1, dailyGoalMl: 2_000, theme: 'system' }),
   useDrinks: () => BUILTIN_DRINKS,
 }));
@@ -52,6 +53,7 @@ describe('TodayPage', () => {
     ).toBeInTheDocument();
     expect(screen.getByText(/500 из 2.000 мл/)).toBeInTheDocument();
     expect(screen.getByText('Осталось 1 500 мл')).toBeInTheDocument();
+    expect(screen.getByText('Серия: 0 дней')).toBeInTheDocument();
     expect(
       screen.getByRole('button', { name: 'Добавить запись' }),
     ).toBeInTheDocument();

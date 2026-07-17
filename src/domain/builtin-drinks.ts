@@ -94,7 +94,14 @@ function builtin(
 }
 
 export const NEW_BUILTIN_DRINKS_V2: readonly Drink[] = [
-  builtin('sparkling-water', 'Газированная вода', 100, 250, '#62C9D8', 'water'),
+  builtin(
+    'sparkling-water',
+    'Газированная вода',
+    100,
+    250,
+    '#62C9D8',
+    'sparkling',
+  ),
   builtin('mineral-water', 'Минеральная вода', 100, 250, '#55B8CF', 'water'),
   builtin(
     'electrolyte-water',
@@ -105,7 +112,7 @@ export const NEW_BUILTIN_DRINKS_V2: readonly Drink[] = [
     'water',
   ),
   builtin('coconut-water', 'Кокосовая вода', 95, 250, '#B6C76A', 'juice'),
-  builtin('sports-drink', 'Спортивный напиток', 95, 500, '#5FC6A8', 'custom'),
+  builtin('sports-drink', 'Спортивный напиток', 95, 500, '#5FC6A8', 'sports'),
   builtin('black-tea', 'Чёрный чай', 95, 250, '#B58A55', 'tea'),
   builtin('green-tea', 'Зелёный чай', 95, 250, '#8EBE63', 'tea'),
   builtin('herbal-tea', 'Травяной чай', 98, 250, '#70B77E', 'tea'),
@@ -125,15 +132,22 @@ export const NEW_BUILTIN_DRINKS_V2: readonly Drink[] = [
   builtin('orange-juice', 'Апельсиновый сок', 90, 200, '#F29A4A', 'juice'),
   builtin('apple-juice', 'Яблочный сок', 88, 200, '#E0B74F', 'juice'),
   builtin('tomato-juice', 'Томатный сок', 94, 200, '#D9684C', 'juice'),
-  builtin('smoothie', 'Смузи', 80, 300, '#D46F91', 'juice'),
+  builtin('smoothie', 'Смузи', 80, 300, '#D46F91', 'cocktail'),
   builtin('fruit-drink', 'Морс', 90, 250, '#C85A78', 'juice'),
   builtin('compote', 'Компот', 90, 250, '#C97B67', 'juice'),
   builtin('diet-soda', 'Газировка без сахара', 95, 330, '#8F9BE8', 'soda'),
-  builtin('energy-drink', 'Энергетический напиток', 85, 250, '#DCB645', 'soda'),
+  builtin(
+    'energy-drink',
+    'Энергетический напиток',
+    85,
+    250,
+    '#DCB645',
+    'energy',
+  ),
   builtin('lemonade', 'Лимонад', 90, 300, '#E2C54F', 'soda'),
   builtin('kombucha', 'Комбуча', 90, 250, '#C58A54', 'tea'),
-  builtin('kvass', 'Квас', 85, 330, '#9B6E4B', 'custom'),
-  builtin('broth', 'Бульон', 95, 250, '#D2A85D', 'custom'),
+  builtin('kvass', 'Квас', 85, 330, '#9B6E4B', 'kvass'),
+  builtin('broth', 'Бульон', 95, 250, '#D2A85D', 'broth'),
   builtin('cocoa', 'Какао', 85, 250, '#9A684F', 'coffee'),
   builtin('hot-chocolate', 'Горячий шоколад', 85, 250, '#895541', 'coffee'),
   builtin(
@@ -142,20 +156,20 @@ export const NEW_BUILTIN_DRINKS_V2: readonly Drink[] = [
     85,
     350,
     '#A98CB7',
-    'custom',
+    'sports',
   ),
-  builtin('milkshake', 'Молочный коктейль', 80, 350, '#D79DB5', 'milk'),
+  builtin('milkshake', 'Молочный коктейль', 80, 350, '#D79DB5', 'cocktail'),
   builtin(
     'non-alcoholic-beer',
     'Безалкогольное пиво',
     90,
     500,
     '#D8AA4A',
-    'custom',
+    'beer',
   ),
-  builtin('beer', 'Пиво', 80, 500, '#C69135', 'custom'),
-  builtin('wine', 'Вино', 70, 150, '#A34E67', 'custom'),
-  builtin('spirits', 'Крепкий алкоголь', 0, 50, '#9A9FA8', 'custom'),
+  builtin('beer', 'Пиво', 80, 500, '#C69135', 'beer'),
+  builtin('wine', 'Вино', 70, 150, '#A34E67', 'wine'),
+  builtin('spirits', 'Крепкий алкоголь', 0, 50, '#9A9FA8', 'cocktail'),
 ];
 
 export const BUILTIN_DRINKS: readonly Drink[] = [
