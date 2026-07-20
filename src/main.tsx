@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { HashRouter } from 'react-router-dom';
 
 import { App } from './app/App';
-import { OrientationGuard } from './app/OrientationGuard';
+import { PwaGestureGuard } from './app/PwaGestureGuard';
 import { UpdatePrompt } from './app/UpdatePrompt';
 import { ThemeProvider } from './app/providers/ThemeProvider';
 import './styles/global.css';
@@ -19,7 +19,7 @@ createRoot(rootElement).render(
     <HashRouter>
       <ThemeProvider>
         <App />
-        <OrientationGuard />
+        <PwaGestureGuard />
         <UpdatePrompt />
       </ThemeProvider>
     </HashRouter>

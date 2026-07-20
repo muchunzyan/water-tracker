@@ -117,7 +117,7 @@
   padding: var(--space-8) 0;
 }
 
-@media (max-width: 720px) {
+@media (max-width: 900px) {
   .shell {
     padding-bottom: calc(104px + env(safe-area-inset-bottom));
     padding-right: max(var(--space-4), env(safe-area-inset-right));

@@ -1,6 +1,6 @@
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 
-import { OrientationGuard } from './OrientationGuard';
+import { PwaGestureGuard } from './PwaGestureGuard';
 
 function mockStandaloneMode(matches: boolean) {
   const mediaQuery = {
@@ -24,32 +24,28 @@ function mockStandaloneMode(matches: boolean) {
   });
 }
 
-describe('OrientationGuard', () => {
+describe('PwaGestureGuard', () => {
   afterEach(() => {
     vi.unstubAllGlobals();
     document.documentElement.classList.remove('pwa-standalone');
   });
 
-  it('не отображается в обычной вкладке браузера', () => {
+  it('не ограничивает жесты в обычной вкладке браузера', () => {
     mockStandaloneMode(false);
 
-    render(<OrientationGuard />);
+    render(<PwaGestureGuard />);
 
-    expect(screen.queryByTestId('orientation-guard')).not.toBeInTheDocument();
     expect(document.documentElement).not.toHaveClass('pwa-standalone');
 
     const gesture = new Event('gesturestart', { cancelable: true });
     expect(document.dispatchEvent(gesture)).toBe(true);
   });
 
-  it('в PWA включает защиту от масштабирования и портретный fallback', () => {
+  it('защищает PWA от масштабирования без блокировки ориентации', () => {
     mockStandaloneMode(true);
 
-    render(<OrientationGuard />);
+    render(<PwaGestureGuard />);
 
-    expect(screen.getByTestId('orientation-guard')).toHaveTextContent(
-      'Поверните телефон',
-    );
     expect(document.documentElement).toHaveClass('pwa-standalone');
 
     const gesture = new Event('gesturestart', { cancelable: true });
