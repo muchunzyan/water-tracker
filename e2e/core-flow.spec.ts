@@ -87,6 +87,16 @@ test('пользователь создаёт напиток и добавляе
   await page.getByRole('combobox', { name: 'Напиток', exact: true }).click();
   await page.getByRole('searchbox', { name: 'Поиск напитка' }).fill('рой');
   await page.getByRole('option', { name: 'Ройбуш · 85%' }).click();
+  await page.getByRole('combobox', { name: 'Напиток', exact: true }).click();
+  const reopenedDrinkSearch = page.getByRole('searchbox', {
+    name: 'Поиск напитка',
+  });
+  await reopenedDrinkSearch.pressSequentially('м');
+  await expect(reopenedDrinkSearch).toBeFocused();
+  await reopenedDrinkSearch.pressSequentially('о');
+  await expect(reopenedDrinkSearch).toBeFocused();
+  await reopenedDrinkSearch.fill('рой');
+  await page.getByRole('option', { name: 'Ройбуш · 85%' }).click();
   await page.getByRole('button', { name: '330 мл' }).click();
   await expect(page.getByText('281 мл', { exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Сохранить запись' }).click();

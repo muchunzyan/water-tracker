@@ -88,6 +88,9 @@ export function SelectField({
         ),
       )
     : options;
+  const visibleValues = new Set(
+    visibleOptions.map((option) => String(option.props.value ?? '')),
+  );
 
   return (
     <Field className={styles.field} data-invalid={Boolean(error)}>
@@ -139,12 +142,13 @@ export function SelectField({
             ) : undefined
           }
         >
-          {visibleOptions.map((option) => {
+          {options.map((option) => {
             const optionValue = String(option.props.value ?? '');
 
             return (
               <SelectItem
                 disabled={option.props.disabled}
+                hidden={!visibleValues.has(optionValue)}
                 key={optionValue}
                 value={optionValue}
               >
