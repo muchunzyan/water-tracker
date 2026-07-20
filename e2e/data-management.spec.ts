@@ -24,7 +24,13 @@ test('пользователь редактирует и удаляет запи
   await expect(
     page.getByRole('heading', { level: 3, name: 'Вода' }),
   ).toBeVisible();
-  await page.getByRole('button', { name: 'Изменить' }).click();
+  const todayEntryCard = page
+    .getByRole('heading', { level: 3, name: 'Вода' })
+    .locator('xpath=ancestor::*[@data-slot="card"][1]');
+  await expect(todayEntryCard.locator('.lucide-droplet')).toBeVisible();
+  const editButton = todayEntryCard.getByRole('button', { name: 'Изменить' });
+  expect((await editButton.boundingBox())?.height).toBeLessThanOrEqual(36);
+  await editButton.click();
   await page.getByRole('spinbutton', { name: 'Выпито, мл' }).fill('500');
   await page.getByRole('button', { name: 'Сохранить изменения' }).click();
 
@@ -32,6 +38,16 @@ test('пользователь редактирует и удаляет запи
     page.getByRole('img', { name: 'Выполнено 19% дневной цели' }),
   ).toBeVisible();
   await expect(page.getByText('500 мл', { exact: true })).toBeVisible();
+
+  await page.getByRole('link', { name: 'История' }).click();
+  const historyEntryCard = page
+    .getByRole('heading', { level: 3, name: 'Вода' })
+    .locator('xpath=ancestor::*[@data-slot="card"][1]');
+  await expect(historyEntryCard.locator('.lucide-droplet')).toBeVisible();
+  await expect(
+    historyEntryCard.getByRole('button', { name: 'Изменить' }),
+  ).toBeVisible();
+  await page.getByRole('link', { name: 'Сегодня' }).click();
 
   page.once('dialog', (dialog) => dialog.accept());
   await page.getByRole('button', { name: 'Удалить' }).click();

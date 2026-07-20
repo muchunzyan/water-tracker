@@ -6,9 +6,7 @@
 .header,
 .dateNavigation,
 .cardHeader,
-.daySummary,
-.entryCard,
-.entryActions {
+.daySummary {
   display: flex;
   align-items: center;
 }
@@ -162,35 +160,6 @@
   font-size: var(--font-size-xl);
 }
 
-.entryCard {
-  display: grid;
-  grid-template-columns: 6px minmax(0, 1fr) auto auto;
-  gap: var(--space-4);
-  padding: var(--space-3) var(--space-4);
-}
-
-.entryColor {
-  align-self: stretch;
-  border-radius: var(--radius-round);
-}
-
-.entryCard h3,
-.entryCard p {
-  margin: 0;
-}
-
-.entryCard h3 {
-  font-size: var(--font-size-md);
-  font-weight: 700;
-  line-height: 1.25;
-}
-
-.entryCard p {
-  margin-top: var(--space-1);
-  color: var(--color-text-muted);
-  font-size: var(--font-size-sm);
-}
-
 @media (max-width: 700px) {
   .header {
     display: grid;
@@ -202,14 +171,6 @@
 
   .dateNavigation strong {
     min-width: 0;
-  }
-
-  .entryCard {
-    grid-template-columns: 6px minmax(0, 1fr) auto;
-  }
-
-  .entryActions {
-    grid-column: 2 / -1;
   }
 }
 

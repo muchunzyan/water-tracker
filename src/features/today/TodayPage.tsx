@@ -1,4 +1,3 @@
-import { format } from 'date-fns';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { useEntries, useEntriesBetween, useSettings } from '../../data/hooks';
@@ -14,6 +13,7 @@ import { EmptyState } from '../../ui/EmptyState/EmptyState';
 import { Icon } from '../../ui/Icon/Icon';
 import { Spinner } from '../../ui/Spinner/Spinner';
 import { AddEntrySheet } from '../entries/AddEntrySheet';
+import { EntryCard } from '../entries/EntryCard';
 import { getLocalDayRange } from './date-range';
 import {
   calculateHydrationStreak,
@@ -195,31 +195,12 @@ export function TodayPage() {
           </div>
           <div className={styles.entries}>
             {entries.slice(0, 6).map((entry) => (
-              <Card className={styles.entryCard} key={entry.id}>
-                <span
-                  className={styles.entryColor}
-                  style={{ background: entry.drink.color }}
-                />
-                <div>
-                  <h3>{entry.drink.name}</h3>
-                  <p>
-                    {format(new Date(entry.consumedAt), 'HH:mm')} ·{' '}
-                    {entry.effectiveHydrationMl} мл гидратации
-                  </p>
-                </div>
-                <strong>{entry.volumeMl} мл</strong>
-                <div className={styles.entryActions}>
-                  <Button onClick={() => setEditorEntry(entry)} variant="ghost">
-                    Изменить
-                  </Button>
-                  <Button
-                    onClick={() => void handleDelete(entry)}
-                    variant="ghost"
-                  >
-                    Удалить
-                  </Button>
-                </div>
-              </Card>
+              <EntryCard
+                entry={entry}
+                key={entry.id}
+                onDelete={handleDelete}
+                onEdit={setEditorEntry}
+              />
             ))}
           </div>
         </section>
