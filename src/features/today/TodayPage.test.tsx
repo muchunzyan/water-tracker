@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import { vi } from 'vitest';
 
 import { BUILTIN_DRINKS } from '../../domain/builtin-drinks';
@@ -43,7 +43,18 @@ vi.mock('../../data/repositories', () => ({
 }));
 
 describe('TodayPage', () => {
-  beforeEach(() => useEntriesBetweenMock.mockReturnValue([entry]));
+  beforeEach(() => {
+    useEntriesBetweenMock.mockReturnValue([entry]);
+    vi.spyOn(window, 'scrollTo').mockImplementation(() => undefined);
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+    Object.defineProperty(window, 'scrollY', {
+      configurable: true,
+      value: 0,
+    });
+  });
 
   it('рассчитывает дневной прогресс и показывает записи', () => {
     render(<TodayPage />);
@@ -62,11 +73,26 @@ describe('TodayPage', () => {
   });
 
   it('запускает анимацию при переходе через дневную цель', async () => {
+    Object.defineProperty(window, 'scrollY', {
+      configurable: true,
+      value: 500,
+    });
     const { rerender } = render(<TodayPage />);
 
     expect(screen.queryByTestId('goal-celebration')).not.toBeInTheDocument();
     useEntriesBetweenMock.mockReturnValue([entry, goalEntry]);
     rerender(<TodayPage />);
+
+    expect(window.scrollTo).toHaveBeenCalledWith({
+      top: 0,
+      left: 0,
+      behavior: 'smooth',
+    });
+    expect(screen.queryByTestId('goal-celebration')).not.toBeInTheDocument();
+
+    act(() => {
+      window.dispatchEvent(new Event('scrollend'));
+    });
 
     expect(await screen.findByTestId('goal-celebration')).toBeInTheDocument();
     expect(screen.getByText('Цель выполнена')).toBeInTheDocument();

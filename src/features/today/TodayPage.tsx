@@ -21,6 +21,49 @@ import {
 } from './hydration-streak';
 import styles from './TodayPage.module.css';
 
+type CelebrationStage = 'idle' | 'scrolling' | 'celebrating';
+
+const SCROLL_COMPLETION_FALLBACK_MS = 700;
+
+function scrollToPageTop(onComplete: () => void) {
+  const isAlreadyAtTop = window.scrollY <= 1;
+  const prefersReducedMotion =
+    window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+  let isComplete = false;
+  let frame: number | undefined;
+  let timeout: number | undefined;
+
+  const complete = () => {
+    if (isComplete) return;
+
+    isComplete = true;
+    window.removeEventListener('scrollend', complete);
+    if (frame !== undefined) window.cancelAnimationFrame(frame);
+    if (timeout !== undefined) window.clearTimeout(timeout);
+    onComplete();
+  };
+
+  window.scrollTo({
+    top: 0,
+    left: 0,
+    behavior: prefersReducedMotion ? 'auto' : 'smooth',
+  });
+
+  if (isAlreadyAtTop || prefersReducedMotion) {
+    frame = window.requestAnimationFrame(complete);
+  } else {
+    window.addEventListener('scrollend', complete, { once: true });
+    timeout = window.setTimeout(complete, SCROLL_COMPLETION_FALLBACK_MS);
+  }
+
+  return () => {
+    isComplete = true;
+    window.removeEventListener('scrollend', complete);
+    if (frame !== undefined) window.cancelAnimationFrame(frame);
+    if (timeout !== undefined) window.clearTimeout(timeout);
+  };
+}
+
 export function TodayPage() {
   const range = useMemo(() => getLocalDayRange(new Date()), []);
   const entries = useEntriesBetween(range.startInclusive, range.endExclusive);
@@ -29,7 +72,9 @@ export function TodayPage() {
   const [editorEntry, setEditorEntry] = useState<HydrationEntry | null>();
   const [notification, setNotification] = useState('');
   const [error, setError] = useState('');
-  const [isCelebrating, setIsCelebrating] = useState(false);
+  const [celebrationStage, setCelebrationStage] =
+    useState<CelebrationStage>('idle');
+  const isCelebrating = celebrationStage === 'celebrating';
   const previousProgress = useRef<number | null>(null);
   const totalVolumeMl =
     entries?.reduce((sum, entry) => sum + entry.volumeMl, 0) ?? 0;
@@ -50,18 +95,24 @@ export function TodayPage() {
       previousProgress.current < 100 &&
       progress >= 100
     ) {
-      setIsCelebrating(true);
+      setCelebrationStage('scrolling');
     }
 
     previousProgress.current = progress;
   }, [isHydrationLoaded, progress]);
 
   useEffect(() => {
-    if (!isCelebrating) return;
+    if (celebrationStage !== 'scrolling') return;
 
-    const timeout = window.setTimeout(() => setIsCelebrating(false), 1_800);
+    return scrollToPageTop(() => setCelebrationStage('celebrating'));
+  }, [celebrationStage]);
+
+  useEffect(() => {
+    if (celebrationStage !== 'celebrating') return;
+
+    const timeout = window.setTimeout(() => setCelebrationStage('idle'), 1_800);
     return () => window.clearTimeout(timeout);
-  }, [isCelebrating]);
+  }, [celebrationStage]);
 
   async function handleDelete(entry: HydrationEntry) {
     if (
