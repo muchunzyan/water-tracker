@@ -32,7 +32,10 @@ describe('EntryCard', () => {
     ).toBeInTheDocument();
     expect(container.querySelector('.lucide-droplet')).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole('button', { name: 'Изменить' }));
+    const editButton = screen.getByRole('button', { name: 'Изменить' });
+    expect(editButton).toHaveClass('bg-secondary');
+
+    fireEvent.click(editButton);
     fireEvent.click(screen.getByRole('button', { name: 'Удалить' }));
     expect(onEdit).toHaveBeenCalledWith(entry);
     expect(onDelete).toHaveBeenCalledWith(entry);

@@ -1,0 +1,102 @@
+.card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4);
+}
+
+.withTrailing {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+}
+
+.icon {
+  display: grid;
+  width: 58px;
+  height: 58px;
+  place-items: center;
+  border-radius: var(--radius-md);
+}
+
+.info,
+.info h2,
+.info h3,
+.info p {
+  min-width: 0;
+  margin: 0;
+}
+
+.info h2,
+.info h3 {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.detailsRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+  flex-wrap: wrap;
+}
+
+.detailsRow p {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  line-height: 1.4;
+}
+
+.badge {
+  flex: 0 0 auto;
+  padding: 3px 7px;
+  color: var(--color-primary);
+  border-radius: var(--radius-round);
+  background: var(--color-primary-soft);
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.info .error {
+  margin-top: var(--space-2);
+  color: var(--color-danger);
+}
+
+.trailing {
+  font-size: var(--font-size-md);
+  white-space: nowrap;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-column: 1 / -1;
+  gap: var(--space-2);
+}
+
+.actions button {
+  width: 100%;
+  min-height: var(--tap-target);
+  font-size: var(--font-size-md);
+  font-weight: 700;
+}
+
+@media (max-width: 440px) {
+  .card,
+  .withTrailing {
+    grid-template-columns: 52px minmax(0, 1fr) auto;
+    column-gap: var(--space-3);
+  }
+
+  .card:not(.withTrailing) {
+    grid-template-columns: 52px minmax(0, 1fr);
+  }
+
+  .icon {
+    width: 52px;
+    height: 52px;
+  }
+}

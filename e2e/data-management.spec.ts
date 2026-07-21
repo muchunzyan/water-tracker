@@ -29,7 +29,9 @@ test('пользователь редактирует и удаляет запи
     .locator('xpath=ancestor::*[@data-slot="card"][1]');
   await expect(todayEntryCard.locator('.lucide-droplet')).toBeVisible();
   const editButton = todayEntryCard.getByRole('button', { name: 'Изменить' });
-  expect((await editButton.boundingBox())?.height).toBeLessThanOrEqual(36);
+  const sharedEditButtonClass = await editButton.getAttribute('class');
+  const sharedEditButtonHeight = (await editButton.boundingBox())?.height;
+  expect(sharedEditButtonHeight).toBe(48);
   await editButton.click();
   await page.getByRole('spinbutton', { name: 'Выпито, мл' }).fill('500');
   await page.getByRole('button', { name: 'Сохранить изменения' }).click();
@@ -44,13 +46,39 @@ test('пользователь редактирует и удаляет запи
     .getByRole('heading', { level: 3, name: 'Вода' })
     .locator('xpath=ancestor::*[@data-slot="card"][1]');
   await expect(historyEntryCard.locator('.lucide-droplet')).toBeVisible();
-  await expect(
-    historyEntryCard.getByRole('button', { name: 'Изменить' }),
-  ).toBeVisible();
+  const historyEditButton = historyEntryCard.getByRole('button', {
+    name: 'Изменить',
+  });
+  await expect(historyEditButton).toBeVisible();
+  expect(await historyEditButton.getAttribute('class')).toBe(
+    sharedEditButtonClass,
+  );
+  expect((await historyEditButton.boundingBox())?.height).toBe(
+    sharedEditButtonHeight,
+  );
+
+  await page.getByRole('link', { name: 'Напитки' }).click();
+  const catalogCard = page
+    .getByRole('heading', { level: 2, name: 'Вода', exact: true })
+    .locator('xpath=ancestor::*[@data-slot="card"][1]');
+  const catalogEditButton = catalogCard.getByRole('button', {
+    name: 'Изменить',
+  });
+  expect(await catalogEditButton.getAttribute('class')).toBe(
+    sharedEditButtonClass,
+  );
+  expect((await catalogEditButton.boundingBox())?.height).toBe(
+    sharedEditButtonHeight,
+  );
+
   await page.getByRole('link', { name: 'Сегодня' }).click();
+  const returnedTodayCard = page
+    .getByRole('heading', { level: 3, name: 'Вода' })
+    .locator('xpath=ancestor::*[@data-slot="card"][1]');
+  await expect(returnedTodayCard).toBeVisible();
 
   page.once('dialog', (dialog) => dialog.accept());
-  await page.getByRole('button', { name: 'Удалить' }).click();
+  await returnedTodayCard.getByRole('button', { name: 'Удалить' }).click();
   await expect(page.getByText('Сегодня записей пока нет')).toBeVisible();
 });
 

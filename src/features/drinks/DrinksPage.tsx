@@ -12,6 +12,7 @@ import { BottomSheet } from '../../ui/BottomSheet/BottomSheet';
 import { Button } from '../../ui/Button/Button';
 import { Card } from '../../ui/Card/Card';
 import { EmptyState } from '../../ui/EmptyState/EmptyState';
+import { DrinkCard } from '../../ui/DrinkCard/DrinkCard';
 import { Icon } from '../../ui/Icon/Icon';
 import { DrinkIcon as DrinkIconGlyph } from '../../ui/DrinkIcon/DrinkIcon';
 import { DRINK_ICON_LABELS } from '../../ui/DrinkIcon/drink-icon-labels';
@@ -124,7 +125,11 @@ export function DrinksPage() {
       ) : (
         <div className={styles.grid}>
           {sortedDrinks.map((drink) => (
-            <DrinkCard drink={drink} key={drink.id} onEdit={setEditingDrink} />
+            <CatalogDrinkCard
+              drink={drink}
+              key={drink.id}
+              onEdit={setEditingDrink}
+            />
           ))}
         </div>
       )}
@@ -140,7 +145,7 @@ export function DrinksPage() {
   );
 }
 
-function DrinkCard({
+function CatalogDrinkCard({
   drink,
   onEdit,
 }: {
@@ -167,33 +172,15 @@ function DrinkCard({
   }
 
   return (
-    <Card className={styles.drinkCard}>
-      <div
-        aria-hidden="true"
-        className={styles.drinkIcon}
-        style={{ backgroundColor: `${drink.color}24`, color: drink.color }}
-      >
-        <DrinkIconGlyph name={drink.icon} size={30} />
-      </div>
-      <div className={styles.drinkInfo}>
-        <h2>{drink.name}</h2>
-        <div className={styles.drinkDetailsRow}>
-          <p>{drink.hydrationPercent}% гидратации</p>
-          {drink.isBuiltin ? (
-            <span className={styles.badge}>Встроенный</span>
-          ) : null}
-        </div>
-        {error ? <p className={styles.error}>{error}</p> : null}
-      </div>
-      <div className={styles.actions}>
-        <Button onClick={() => onEdit(drink)} variant="secondary">
-          Изменить
-        </Button>
-        <Button onClick={() => void handleDelete()} variant="ghost">
-          Удалить
-        </Button>
-      </div>
-    </Card>
+    <DrinkCard
+      badge={drink.isBuiltin ? 'Встроенный' : undefined}
+      details={`${drink.hydrationPercent}% гидратации`}
+      drink={drink}
+      error={error}
+      headingLevel={2}
+      onDelete={handleDelete}
+      onEdit={() => onEdit(drink)}
+    />
   );
 }
 
