@@ -73,12 +73,28 @@ export const hydrationProfileSchema = z.object({
   activityLevel: z.enum(ACTIVITY_LEVELS),
 });
 
+export const dailyWeatherSchema = z.object({
+  date: z.iso.date(),
+  maxTemperatureC: z.number().min(-80).max(70),
+  latitude: z.number().min(-90).max(90),
+  longitude: z.number().min(-180).max(180),
+  fetchedAt: timestampSchema,
+});
+
+export const dailyTrainingSchema = z.object({
+  date: z.iso.date(),
+  hours: z.number().min(0).max(24),
+});
+
 export const settingsSchema = z.object({
   version: z.literal(1),
   dailyGoalMl: z.number().int().min(250).max(10_000),
   theme: z.enum(THEME_PREFERENCES),
   onboardingCompleted: z.boolean().default(false),
   hydrationProfile: hydrationProfileSchema.optional(),
+  useTemperatureAdjustment: z.boolean().default(false),
+  weather: dailyWeatherSchema.optional(),
+  training: dailyTrainingSchema.optional(),
 });
 
 export const backupSchema = z.object({
@@ -93,6 +109,8 @@ export type DrinkIcon = (typeof DRINK_ICONS)[number];
 export type ThemePreference = (typeof THEME_PREFERENCES)[number];
 export type ActivityLevel = (typeof ACTIVITY_LEVELS)[number];
 export type HydrationProfile = z.infer<typeof hydrationProfileSchema>;
+export type DailyWeather = z.infer<typeof dailyWeatherSchema>;
+export type DailyTraining = z.infer<typeof dailyTrainingSchema>;
 export type DrinkSnapshot = z.infer<typeof drinkSnapshotSchema>;
 export type Drink = z.infer<typeof drinkSchema>;
 export type HydrationEntry = z.infer<typeof hydrationEntrySchema>;

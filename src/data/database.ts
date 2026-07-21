@@ -13,6 +13,7 @@ export const DEFAULT_SETTINGS: Settings = {
   dailyGoalMl: 2_000,
   theme: 'system',
   onboardingCompleted: false,
+  useTemperatureAdjustment: false,
 };
 
 interface StoredSettings extends Settings {

@@ -244,6 +244,7 @@ describe('local database', () => {
       dailyGoalMl: 3_000,
       theme: 'dark',
       onboardingCompleted: true,
+      useTemperatureAdjustment: false,
     });
 
     await resetAllData(database);

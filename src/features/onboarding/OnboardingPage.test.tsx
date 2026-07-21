@@ -18,6 +18,11 @@ describe('OnboardingPage', () => {
 
     expect(screen.getByText('2 550 мл')).toBeInTheDocument();
     fireEvent.click(
+      screen.getByRole('checkbox', {
+        name: /Учитывать температуру воздуха/,
+      }),
+    );
+    fireEvent.click(
       screen.getByRole('button', { name: 'Сохранить и продолжить' }),
     );
 
@@ -26,6 +31,7 @@ describe('OnboardingPage', () => {
         expect.objectContaining({
           dailyGoalMl: 2_550,
           onboardingCompleted: true,
+          useTemperatureAdjustment: true,
           hydrationProfile: {
             heightCm: 170,
             weightKg: 70,

@@ -41,6 +41,25 @@
   isolation: isolate;
 }
 
+.dailyFactors {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.55fr);
+  align-items: end;
+  gap: var(--space-5);
+}
+
+.dailyFactors h2,
+.dailyFactors p {
+  margin: 0;
+}
+
+.dailyFactors p {
+  margin-top: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+}
+
 .progressCard > :not(.celebration) {
   position: relative;
   z-index: 1;
@@ -328,6 +347,10 @@
 
   .progressCard {
     grid-template-columns: auto 1fr;
+  }
+
+  .dailyFactors {
+    grid-template-columns: 1fr;
   }
 
   .progressCard > :last-child {

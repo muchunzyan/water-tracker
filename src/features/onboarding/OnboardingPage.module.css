@@ -106,6 +106,34 @@
   background: var(--color-primary-soft);
 }
 
+.temperatureChoice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-solid);
+  cursor: pointer;
+}
+
+.temperatureChoice input {
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  accent-color: var(--color-primary);
+}
+
+.temperatureChoice span {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.temperatureChoice small {
+  color: var(--color-text-muted);
+  line-height: 1.45;
+}
+
 .result {
   display: flex;
   align-items: center;

@@ -191,6 +191,26 @@
   outline-offset: 2px;
 }
 
+.toggle {
+  display: flex;
+  min-height: var(--tap-target);
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-round);
+  background: var(--color-surface-solid);
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.toggle input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--color-primary);
+}
+
 .dangerSection {
   border-color: color-mix(in srgb, var(--color-danger) 30%, transparent);
 }

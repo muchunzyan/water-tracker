@@ -7,7 +7,7 @@ import {
   parseBackupJson,
   replaceFromBackup,
 } from '../../data/backup';
-import { saveSettings, useSettings } from '../../data/hooks';
+import { saveSettings, updateSettings, useSettings } from '../../data/hooks';
 import { drinkRepository, resetAllData } from '../../data/repositories';
 import {
   ACTIVITY_LEVELS,
@@ -64,6 +64,9 @@ function SettingsContent({ initialSettings }: { initialSettings: Settings }) {
   );
   const [activityLevel, setActivityLevel] = useState<ActivityLevel>(
     initialSettings.hydrationProfile?.activityLevel ?? 'moderate',
+  );
+  const [useTemperatureAdjustment, setUseTemperatureAdjustment] = useState(
+    initialSettings.useTemperatureAdjustment,
   );
   const [isSaving, setIsSaving] = useState(false);
   const [isTransferring, setIsTransferring] = useState(false);
@@ -128,6 +131,22 @@ function SettingsContent({ initialSettings }: { initialSettings: Settings }) {
       setError('Не удалось сохранить параметры.');
     } finally {
       setIsSaving(false);
+    }
+  }
+
+  async function handleTemperaturePreference(enabled: boolean) {
+    setUseTemperatureAdjustment(enabled);
+    try {
+      setError('');
+      await updateSettings({ useTemperatureAdjustment: enabled });
+      setNotification(
+        enabled
+          ? 'Поправка на температуру включена'
+          : 'Поправка на температуру выключена',
+      );
+    } catch {
+      setUseTemperatureAdjustment(!enabled);
+      setError('Не удалось сохранить настройку температуры');
     }
   }
 
@@ -306,6 +325,32 @@ function SettingsContent({ initialSettings }: { initialSettings: Settings }) {
             Пересчитать цель
           </Button>
         </form>
+      </Card>
+
+      <Card className={styles.section}>
+        <div>
+          <h2>Температура воздуха</h2>
+          <p>
+            Добавляет 100 мл к дневной норме за каждый градус максимальной
+            температуры выше 25 °C
+          </p>
+          {initialSettings.weather ? (
+            <p>
+              Последний прогноз: {initialSettings.weather.maxTemperatureC} °C за{' '}
+              {initialSettings.weather.date}
+            </p>
+          ) : null}
+        </div>
+        <label className={styles.toggle}>
+          <input
+            checked={useTemperatureAdjustment}
+            onChange={(event) =>
+              void handleTemperaturePreference(event.target.checked)
+            }
+            type="checkbox"
+          />
+          <span>Учитывать температуру</span>
+        </label>
       </Card>
 
       <Card className={styles.section}>

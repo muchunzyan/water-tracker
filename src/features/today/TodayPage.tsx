@@ -1,8 +1,20 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { useEntries, useEntriesBetween, useSettings } from '../../data/hooks';
+import {
+  updateSettings,
+  useEntries,
+  useEntriesBetween,
+  useSettings,
+} from '../../data/hooks';
 import { entryRepository } from '../../data/repositories';
-import type { HydrationEntry } from '../../domain/models';
+import {
+  calculateDailyGoalMl,
+  getLocalDateKey,
+  HEAT_ML_PER_DEGREE,
+  HEAT_THRESHOLD_C,
+  TRAINING_ML_PER_HOUR,
+} from '../../domain/hydration-goal';
+import type { HydrationEntry, Settings } from '../../domain/models';
 import {
   calculateProgressPercent,
   calculateRemainingMl,
@@ -12,6 +24,7 @@ import { Card } from '../../ui/Card/Card';
 import { EmptyState } from '../../ui/EmptyState/EmptyState';
 import { Icon } from '../../ui/Icon/Icon';
 import { Spinner } from '../../ui/Spinner/Spinner';
+import { TextField } from '../../ui/TextField/TextField';
 import { AddEntrySheet } from '../entries/AddEntrySheet';
 import { EntryCard } from '../entries/EntryCard';
 import { getLocalDayRange } from './date-range';
@@ -65,7 +78,11 @@ function scrollToPageTop(onComplete: () => void) {
 }
 
 export function TodayPage() {
-  const range = useMemo(() => getLocalDayRange(new Date()), []);
+  const todayKey = useCurrentDateKey();
+  const range = useMemo(
+    () => getLocalDayRange(new Date(`${todayKey}T12:00:00`)),
+    [todayKey],
+  );
   const entries = useEntriesBetween(range.startInclusive, range.endExclusive);
   const allEntries = useEntries();
   const settings = useSettings();
@@ -80,11 +97,14 @@ export function TodayPage() {
     entries?.reduce((sum, entry) => sum + entry.volumeMl, 0) ?? 0;
   const effectiveHydrationMl =
     entries?.reduce((sum, entry) => sum + entry.effectiveHydrationMl, 0) ?? 0;
-  const goalMl = settings?.dailyGoalMl ?? 2_000;
+  const goalMl = settings ? calculateDailyGoalMl(settings) : 2_000;
   const progress = calculateProgressPercent(effectiveHydrationMl, goalMl);
   const visualProgress = Math.min(progress, 100);
   const remainingMl = calculateRemainingMl(effectiveHydrationMl, goalMl);
-  const hydrationStreak = calculateHydrationStreak(allEntries ?? [], goalMl);
+  const hydrationStreak = calculateHydrationStreak(
+    allEntries ?? [],
+    settings?.dailyGoalMl ?? 2_000,
+  );
   const isHydrationLoaded = entries !== undefined && settings !== undefined;
 
   useEffect(() => {
@@ -141,6 +161,14 @@ export function TodayPage() {
           {getProgressMessage(progress, entries?.length ?? 0)}
         </p>
       </section>
+
+      {settings ? (
+        <DailyFactors
+          onError={setError}
+          settings={settings}
+          todayKey={todayKey}
+        />
+      ) : null}
 
       <Card
         className={`${styles.progressCard} ${isCelebrating ? styles.goalReached : ''}`}
@@ -274,6 +302,128 @@ export function TodayPage() {
 
 function formatMl(value: number) {
   return new Intl.NumberFormat('ru-RU').format(value);
+}
+
+function useCurrentDateKey() {
+  const [dateKey, setDateKey] = useState(() => getLocalDateKey());
+
+  useEffect(() => {
+    const now = new Date();
+    const nextDay = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate() + 1,
+      0,
+      0,
+      1,
+    );
+    const timeout = window.setTimeout(
+      () => setDateKey(getLocalDateKey()),
+      nextDay.getTime() - now.getTime(),
+    );
+    return () => window.clearTimeout(timeout);
+  }, [dateKey]);
+
+  return dateKey;
+}
+
+function formatTrainingHours(value: number) {
+  return new Intl.NumberFormat('ru-RU', {
+    maximumFractionDigits: 2,
+  }).format(value);
+}
+
+function isValidTrainingHours(value: string) {
+  const normalized = value.replace(',', '.');
+  if (!/^\d{1,2}(?:\.\d{0,2})?$/.test(normalized)) return false;
+  const hours = Number(normalized);
+  return Number.isFinite(hours) && hours >= 0 && hours <= 24;
+}
+
+function DailyFactors({
+  onError,
+  settings,
+  todayKey,
+}: {
+  onError: (message: string) => void;
+  settings: Settings;
+  todayKey: string;
+}) {
+  const [trainingHours, setTrainingHours] = useState(() =>
+    settings.training?.date === todayKey
+      ? formatTrainingHours(settings.training.hours)
+      : '0',
+  );
+
+  useEffect(() => {
+    const normalized = trainingHours.replace(',', '.');
+    if (!/^\d{1,2}(?:\.\d{0,2})?$/.test(normalized)) return;
+    const hours = Number(normalized);
+    if (!Number.isFinite(hours) || hours < 0 || hours > 24) return;
+    if (
+      settings.training?.date === todayKey &&
+      settings.training.hours === hours
+    ) {
+      return;
+    }
+
+    const timeout = window.setTimeout(() => {
+      void updateSettings({ training: { date: todayKey, hours } }).catch(() =>
+        onError('Не удалось сохранить часы тренировок'),
+      );
+    }, 300);
+    return () => window.clearTimeout(timeout);
+  }, [onError, settings.training, todayKey, trainingHours]);
+
+  return (
+    <Card className={styles.dailyFactors}>
+      <div>
+        <h2>Поправка на сегодня</h2>
+        <p>{getAdjustmentDescription(settings)}</p>
+      </div>
+      <TextField
+        error={
+          isValidTrainingHours(trainingHours)
+            ? undefined
+            : 'Введите число от 0 до 24, не более двух знаков после запятой'
+        }
+        inputMode="decimal"
+        label="Часов тренировок сегодня"
+        onChange={(event) => {
+          const value = event.target.value;
+          if (/^\d{0,2}(?:[.,]\d{0,2})?$/.test(value)) {
+            setTrainingHours(value);
+          }
+        }}
+        type="text"
+        value={trainingHours}
+      />
+    </Card>
+  );
+}
+
+function getAdjustmentDescription(settings: Settings) {
+  const dateKey = getLocalDateKey();
+  const trainingHours =
+    settings.training?.date === dateKey ? settings.training.hours : 0;
+  const parts = [
+    `Тренировки: +${formatMl(trainingHours * TRAINING_ML_PER_HOUR)} мл`,
+  ];
+
+  if (!settings.useTemperatureAdjustment) {
+    parts.push('температура не учитывается');
+  } else if (settings.weather?.date !== dateKey) {
+    parts.push('прогноз на сегодня пока недоступен');
+  } else {
+    const heatAdjustment =
+      Math.max(0, settings.weather.maxTemperatureC - HEAT_THRESHOLD_C) *
+      HEAT_ML_PER_DEGREE;
+    parts.push(
+      `до ${settings.weather.maxTemperatureC} °C: +${formatMl(heatAdjustment)} мл`,
+    );
+  }
+
+  return parts.join(' · ');
 }
 
 function getGreeting() {

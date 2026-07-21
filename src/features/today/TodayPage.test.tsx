@@ -9,6 +9,12 @@ const { useEntriesBetweenMock } = vi.hoisted(() => ({
   useEntriesBetweenMock: vi.fn<() => HydrationEntry[]>(),
 }));
 
+const todayKey = [
+  new Date().getFullYear(),
+  String(new Date().getMonth() + 1).padStart(2, '0'),
+  String(new Date().getDate()).padStart(2, '0'),
+].join('-');
+
 const water = BUILTIN_DRINKS[0]!;
 const entry: HydrationEntry = {
   id: 'entry-today',
@@ -24,14 +30,29 @@ const entry: HydrationEntry = {
 const goalEntry: HydrationEntry = {
   ...entry,
   id: 'entry-goal',
-  volumeMl: 1_500,
-  effectiveHydrationMl: 1_500,
+  volumeMl: 2_000,
+  effectiveHydrationMl: 2_000,
 };
 
 vi.mock('../../data/hooks', () => ({
   useEntriesBetween: () => useEntriesBetweenMock(),
   useEntries: () => useEntriesBetweenMock(),
-  useSettings: () => ({ version: 1, dailyGoalMl: 2_000, theme: 'system' }),
+  useSettings: () => ({
+    version: 1,
+    dailyGoalMl: 2_000,
+    theme: 'system',
+    onboardingCompleted: true,
+    useTemperatureAdjustment: true,
+    training: { date: todayKey, hours: 0.5 },
+    weather: {
+      date: todayKey,
+      maxTemperatureC: 27,
+      latitude: 55.75,
+      longitude: 37.62,
+      fetchedAt: new Date().toISOString(),
+    },
+  }),
+  updateSettings: vi.fn().mockResolvedValue(undefined),
   useDrinks: () => BUILTIN_DRINKS,
 }));
 
@@ -60,10 +81,14 @@ describe('TodayPage', () => {
     render(<TodayPage />);
 
     expect(
-      screen.getByRole('img', { name: 'Выполнено 25% дневной цели' }),
+      screen.getByRole('img', { name: 'Выполнено 20% дневной цели' }),
     ).toBeInTheDocument();
-    expect(screen.getByText(/500 из 2.000 мл/)).toBeInTheDocument();
-    expect(screen.getByText('Осталось 1 500 мл')).toBeInTheDocument();
+    expect(screen.getByText(/500 из 2.500 мл/)).toBeInTheDocument();
+    expect(screen.getByText('Осталось 2 000 мл')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('0,5')).toBeInTheDocument();
+    expect(
+      screen.getByText('Тренировки: +300 мл · до 27 °C: +200 мл'),
+    ).toBeInTheDocument();
     expect(screen.getByText('Серия: 0 дней')).toBeInTheDocument();
     expect(screen.getByLabelText('Записей за сегодня: 1')).toBeInTheDocument();
     expect(

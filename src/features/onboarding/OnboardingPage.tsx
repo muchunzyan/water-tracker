@@ -28,6 +28,9 @@ export function OnboardingPage({ settings }: { settings: Settings }) {
   const [activityLevel, setActivityLevel] = useState<ActivityLevel>(
     settings.hydrationProfile?.activityLevel ?? 'moderate',
   );
+  const [useTemperatureAdjustment, setUseTemperatureAdjustment] = useState(
+    settings.useTemperatureAdjustment,
+  );
   const [error, setError] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const profileResult = hydrationProfileSchema.safeParse({
@@ -55,6 +58,7 @@ export function OnboardingPage({ settings }: { settings: Settings }) {
         dailyGoalMl: recommendedGoal,
         hydrationProfile: profileResult.data,
         onboardingCompleted: true,
+        useTemperatureAdjustment,
       });
     } catch {
       setError('Не удалось сохранить параметры. Попробуйте ещё раз.');
@@ -119,6 +123,22 @@ export function OnboardingPage({ settings }: { settings: Settings }) {
               </label>
             ))}
           </fieldset>
+          <label className={styles.temperatureChoice}>
+            <input
+              checked={useTemperatureAdjustment}
+              onChange={(event) =>
+                setUseTemperatureAdjustment(event.target.checked)
+              }
+              type="checkbox"
+            />
+            <span>
+              <strong>Учитывать температуру воздуха</strong>
+              <small>
+                Oasis запросит геолокацию и один раз в день загрузит прогноз
+                Open-Meteo. Без прогноза поправка применяться не будет
+              </small>
+            </span>
+          </label>
           <div className={styles.result} aria-live="polite">
             <span>Ориентировочная дневная цель</span>
             <strong>

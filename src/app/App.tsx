@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 
 import { AppShell } from './AppShell';
+import { DailyWeatherSync } from './DailyWeatherSync';
 import { useTheme } from './providers/theme-context';
 import { useSettings } from '../data/hooks';
 import { OnboardingPage } from '../features/onboarding/OnboardingPage';
@@ -39,27 +40,30 @@ export function App() {
   }
 
   return (
-    <AppShell
-      actions={
-        <Button
-          aria-label={`Включить ${nextTheme === 'dark' ? 'тёмную' : 'светлую'} тему`}
-          onClick={() => setPreference(nextTheme)}
-          variant="ghost"
-        >
-          <Icon name={resolvedTheme === 'light' ? 'moon' : 'sun'} size={20} />
-        </Button>
-      }
-    >
-      <Suspense fallback={<PageLoader />}>
-        <Routes>
-          <Route path="/" element={<TodayPage />} />
-          <Route path="/history" element={<HistoryPage />} />
-          <Route path="/drinks" element={<DrinksPage />} />
-          <Route path="/settings" element={<SettingsPage />} />
-          <Route path="*" element={<Navigate replace to="/" />} />
-        </Routes>
-      </Suspense>
-    </AppShell>
+    <>
+      <DailyWeatherSync settings={settings} />
+      <AppShell
+        actions={
+          <Button
+            aria-label={`Включить ${nextTheme === 'dark' ? 'тёмную' : 'светлую'} тему`}
+            onClick={() => setPreference(nextTheme)}
+            variant="ghost"
+          >
+            <Icon name={resolvedTheme === 'light' ? 'moon' : 'sun'} size={20} />
+          </Button>
+        }
+      >
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
+            <Route path="/" element={<TodayPage />} />
+            <Route path="/history" element={<HistoryPage />} />
+            <Route path="/drinks" element={<DrinksPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="*" element={<Navigate replace to="/" />} />
+          </Routes>
+        </Suspense>
+      </AppShell>
+    </>
   );
 }
 

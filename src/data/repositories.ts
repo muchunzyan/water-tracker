@@ -85,6 +85,13 @@ export class SettingsRepository {
     await this.database.settings.put({ id: 'settings', ...validSettings });
     return validSettings;
   }
+
+  async update(patch: Partial<Settings>) {
+    return this.database.transaction('rw', this.database.settings, async () => {
+      const current = await this.get();
+      return this.save({ ...current, ...patch });
+    });
+  }
 }
 
 export const drinkRepository = new DrinkRepository();

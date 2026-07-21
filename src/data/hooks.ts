@@ -32,3 +32,7 @@ export function useSettings() {
 export function saveSettings(settings: Settings) {
   return settingsRepository.save(settings);
 }
+
+export function updateSettings(patch: Partial<Settings>) {
+  return settingsRepository.update(patch);
+}

@@ -39,6 +39,7 @@ describe('backup', () => {
       dailyGoalMl: 2_500,
       theme: 'dark',
       onboardingCompleted: true,
+      useTemperatureAdjustment: false,
     });
     const backup = await createBackup(database);
 
@@ -48,6 +49,7 @@ describe('backup', () => {
       dailyGoalMl: 1_000,
       theme: 'light',
       onboardingCompleted: true,
+      useTemperatureAdjustment: false,
     });
     await replaceFromBackup(backup, database);
 
