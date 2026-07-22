@@ -51,7 +51,7 @@
 .badge {
   flex: 0 0 auto;
   padding: 3px 7px;
-  color: var(--color-primary);
+  color: var(--color-primary-strong);
   border-radius: var(--radius-round);
   background: var(--color-primary-soft);
   font-size: 0.65rem;

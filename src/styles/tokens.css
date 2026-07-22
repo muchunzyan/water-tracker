@@ -1,12 +1,17 @@
 :root {
   color-scheme: light;
 
-  --color-aqua-50: #eefbf9;
-  --color-aqua-100: #d5f5f0;
-  --color-aqua-300: #73ddd0;
-  --color-aqua-500: #18b8aa;
-  --color-aqua-600: #07968d;
-  --color-aqua-700: #087872;
+  --color-aqua-50: #f0fbff;
+  --color-aqua-100: #caf0f8;
+  --color-aqua-300: #90e0ef;
+  --color-aqua-500: #48cae4;
+  --color-aqua-600: #0077b6;
+  --color-aqua-700: #005f8f;
+  --color-oasis-aqua: #48cae4;
+  --color-oasis-water: #0077b6;
+  --color-oasis-deep: #023e8a;
+  --color-oasis-leaf: #90be6d;
+  --color-oasis-sand: #ffd166;
   --color-ink-950: #142f3d;
   --color-ink-700: #3e5c69;
   --color-ink-500: #6e8791;
@@ -32,8 +37,9 @@
     transparent
   );
   --color-primary: var(--primary);
-  --color-primary-hover: color-mix(in oklch, var(--primary) 82%, black);
-  --color-primary-soft: color-mix(in oklch, var(--primary) 12%, transparent);
+  --color-primary-strong: var(--color-aqua-700);
+  --color-primary-hover: var(--color-aqua-700);
+  --color-primary-soft: #e3f3fb;
   --color-border: var(--border);
   --color-overlay: rgb(0 0 0 / 62%);
   --color-focus: var(--ring);
@@ -73,6 +79,8 @@
 
 :root[data-theme='dark'] {
   color-scheme: dark;
+  --color-primary-strong: #5bbce8;
+  --color-primary-soft: #123a52;
   --shadow-card: 0 18px 50px rgb(0 0 0 / 18%);
   --shadow-floating: 0 18px 45px rgb(0 0 0 / 38%);
 }

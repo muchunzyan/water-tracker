@@ -25,7 +25,7 @@ export function AppShell({ actions, children }: AppShellProps) {
       <header className={styles.header}>
         <div className={styles.brand}>
           <span className={styles.logo} aria-hidden="true">
-            <img alt="" src={`${import.meta.env.BASE_URL}icon.svg`} />
+            <img alt="" src={`${import.meta.env.BASE_URL}header-icon.png`} />
           </span>
           <span>Oasis — Water Tracker</span>
         </div>

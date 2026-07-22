@@ -11,7 +11,7 @@
   height: 64px;
   margin-bottom: var(--space-4);
   place-items: center;
-  color: var(--color-primary);
+  color: var(--color-primary-strong);
   border-radius: var(--radius-round);
   background: var(--color-primary-soft);
 }

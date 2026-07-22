@@ -21,7 +21,7 @@
 .eyebrow,
 .cardLabel {
   margin: 0;
-  color: var(--color-primary);
+  color: var(--color-primary-strong);
   font-size: var(--font-size-xs);
   font-weight: 800;
   letter-spacing: 0.12em;
@@ -84,7 +84,7 @@
 }
 
 .chart button[aria-pressed='true'] {
-  color: var(--color-primary);
+  color: var(--color-primary-strong);
   background: var(--color-primary-soft);
 }
 
@@ -118,7 +118,7 @@
 }
 
 .daySummary > strong {
-  color: var(--color-primary);
+  color: var(--color-primary-strong);
   font-size: var(--font-size-xl);
 }
 
@@ -137,7 +137,7 @@
 }
 
 .notification {
-  color: var(--color-primary);
+  color: var(--color-primary-strong);
 }
 
 .error {
