@@ -216,7 +216,7 @@
 .toggle input {
   width: 20px;
   height: 20px;
-  accent-color: var(--color-primary-strong);
+  accent-color: var(--color-primary);
 }
 
 .dangerSection {

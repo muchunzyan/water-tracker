@@ -122,7 +122,7 @@
   width: 20px;
   height: 20px;
   margin-top: 2px;
-  accent-color: var(--color-primary-strong);
+  accent-color: var(--color-primary);
 }
 
 .temperatureChoice span {
