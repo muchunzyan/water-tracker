@@ -1,4 +1,5 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { vi } from 'vitest';
 
 import { OnboardingPage } from './OnboardingPage';
@@ -14,7 +15,17 @@ describe('OnboardingPage', () => {
   beforeEach(() => saveSettings.mockClear());
 
   it('рассчитывает цель и завершает первый запуск', async () => {
-    render(<OnboardingPage settings={DEFAULT_SETTINGS} />);
+    render(
+      <MemoryRouter initialEntries={['/settings']}>
+        <Routes>
+          <Route
+            element={<OnboardingPage settings={DEFAULT_SETTINGS} />}
+            path="/settings"
+          />
+          <Route element={<h1>Сегодня</h1>} path="/" />
+        </Routes>
+      </MemoryRouter>,
+    );
 
     expect(screen.getByText('2 550 мл')).toBeInTheDocument();
     fireEvent.click(
@@ -40,5 +51,8 @@ describe('OnboardingPage', () => {
         }),
       ),
     );
+    expect(
+      await screen.findByRole('heading', { name: 'Сегодня' }),
+    ).toBeInTheDocument();
   });
 });

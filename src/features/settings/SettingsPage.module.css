@@ -157,6 +157,14 @@
   line-height: 1.7;
 }
 
+.instructions a {
+  color: var(--color-primary);
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
 .backupActions {
   display: grid;
   grid-template-columns: 1fr 1fr;

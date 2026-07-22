@@ -140,6 +140,11 @@ test('пользователь меняет дневную цель и тему'
   expect(
     Math.max(...themeOptionWidths) - Math.min(...themeOptionWidths),
   ).toBeLessThan(1);
+  await expect(
+    page.getByRole('link', {
+      name: 'muchunzyan.github.io/water-tracker',
+    }),
+  ).toHaveAttribute('href', 'https://muchunzyan.github.io/water-tracker');
   await expect(themeOptions[0]).toHaveCSS(
     'font-size',
     testInfo.project.name === 'mobile-chrome' ? '16px' : '14px',

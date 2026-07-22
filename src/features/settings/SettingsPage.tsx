@@ -332,7 +332,11 @@ function SettingsContent({ initialSettings }: { initialSettings: Settings }) {
           <h2>Температура воздуха</h2>
           <p>
             Добавляет 100 мл к дневной норме за каждый градус максимальной
-            температуры выше 25 °C
+            температуры выше 25&nbsp;°C.
+          </p>
+          <p>
+            Oasis запросит геолокацию и один раз в день загрузит прогноз
+            Open-Meteo. Без прогноза поправка применяться не будет.
           </p>
           {initialSettings.weather ? (
             <p>
@@ -434,8 +438,11 @@ function SettingsContent({ initialSettings }: { initialSettings: Settings }) {
         </div>
         <ol className={styles.instructions}>
           <li>
-            Зайдите в Safari на muchunzyan.github.io/water-tracker и нажмите
-            «...»
+            Зайдите в Safari на{' '}
+            <a href="https://muchunzyan.github.io/water-tracker">
+              muchunzyan.github.io/water-tracker
+            </a>{' '}
+            и нажмите «...»
           </li>
           <li>Выберите «Поделиться»</li>
           <li>Нажмите «Показать больше»</li>

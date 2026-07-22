@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { saveSettings } from '../../data/hooks';
 import { calculateRecommendedGoalMl } from '../../domain/hydration-goal';
@@ -19,6 +20,7 @@ const ACTIVITY_LABELS: Record<ActivityLevel, string> = {
 };
 
 export function OnboardingPage({ settings }: { settings: Settings }) {
+  const navigate = useNavigate();
   const [heightCm, setHeightCm] = useState(
     String(settings.hydrationProfile?.heightCm ?? 170),
   );
@@ -60,6 +62,7 @@ export function OnboardingPage({ settings }: { settings: Settings }) {
         onboardingCompleted: true,
         useTemperatureAdjustment,
       });
+      await navigate('/', { replace: true });
     } catch {
       setError('Не удалось сохранить параметры. Попробуйте ещё раз.');
     } finally {
@@ -133,10 +136,14 @@ export function OnboardingPage({ settings }: { settings: Settings }) {
             />
             <span>
               <strong>Учитывать температуру воздуха</strong>
-              <small>
+              <p>
+                Добавляет 100 мл к дневной норме за каждый градус максимальной
+                температуры выше 25&nbsp;°C.
+              </p>
+              <p>
                 Oasis запросит геолокацию и один раз в день загрузит прогноз
-                Open-Meteo. Без прогноза поправка применяться не будет
-              </small>
+                Open-Meteo. Без прогноза поправка применяться не будет.
+              </p>
             </span>
           </label>
           <div className={styles.result} aria-live="polite">
