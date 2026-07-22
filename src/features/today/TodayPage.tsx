@@ -354,6 +354,7 @@ function DailyFactors({
       ? formatTrainingHours(settings.training.hours)
       : '0',
   );
+  const adjustmentDescription = getAdjustmentDescription(settings);
 
   useEffect(() => {
     const normalized = trainingHours.replace(',', '.');
@@ -377,9 +378,13 @@ function DailyFactors({
 
   return (
     <Card className={styles.dailyFactors}>
-      <div>
+      <div className={styles.dailyFactorsSummary}>
         <h2>Поправка на сегодня</h2>
-        <p>{getAdjustmentDescription(settings)}</p>
+        <div className={styles.dailyFactorsDetails}>
+          {adjustmentDescription.map((line) => (
+            <p key={line}>{line}</p>
+          ))}
+        </div>
       </div>
       <TextField
         error={
@@ -406,24 +411,24 @@ function getAdjustmentDescription(settings: Settings) {
   const dateKey = getLocalDateKey();
   const trainingHours =
     settings.training?.date === dateKey ? settings.training.hours : 0;
-  const parts = [
+  const lines = [
     `Тренировки: +${formatMl(trainingHours * TRAINING_ML_PER_HOUR)} мл`,
   ];
 
   if (!settings.useTemperatureAdjustment) {
-    parts.push('температура не учитывается');
+    lines.push('Температура не учитывается');
   } else if (settings.weather?.date !== dateKey) {
-    parts.push('прогноз на сегодня пока недоступен');
+    lines.push('Прогноз на сегодня пока недоступен');
   } else {
     const heatAdjustment =
       Math.max(0, settings.weather.maxTemperatureC - HEAT_THRESHOLD_C) *
       HEAT_ML_PER_DEGREE;
-    parts.push(
-      `до ${settings.weather.maxTemperatureC} °C: +${formatMl(heatAdjustment)} мл`,
+    lines.push(
+      `Температура до ${settings.weather.maxTemperatureC} °C: +${formatMl(heatAdjustment)} мл`,
     );
   }
 
-  return parts.join(' · ');
+  return lines;
 }
 
 function getGreeting() {

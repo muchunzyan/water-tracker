@@ -86,8 +86,9 @@ describe('TodayPage', () => {
     expect(screen.getByText(/500 из 2.500 мл/)).toBeInTheDocument();
     expect(screen.getByText('Осталось 2 000 мл')).toBeInTheDocument();
     expect(screen.getByDisplayValue('0,5')).toBeInTheDocument();
+    expect(screen.getByText('Тренировки: +300 мл')).toBeInTheDocument();
     expect(
-      screen.getByText('Тренировки: +300 мл · до 27 °C: +200 мл'),
+      screen.getByText('Температура до 27 °C: +200 мл'),
     ).toBeInTheDocument();
     expect(screen.getByText('Серия: 0 дней')).toBeInTheDocument();
     expect(screen.getByLabelText('Записей за сегодня: 1')).toBeInTheDocument();

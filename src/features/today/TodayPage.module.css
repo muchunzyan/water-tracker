@@ -43,18 +43,34 @@
 
 .dailyFactors {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.55fr);
-  align-items: end;
-  gap: var(--space-5);
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 0.72fr);
+  align-items: center;
+  gap: var(--space-8);
 }
 
-.dailyFactors h2,
-.dailyFactors p {
+.dailyFactorsSummary {
+  display: grid;
+  min-width: 0;
+  align-content: center;
+  gap: var(--space-2);
+}
+
+.dailyFactorsSummary h2,
+.dailyFactorsSummary p {
   margin: 0;
 }
 
-.dailyFactors p {
-  margin-top: var(--space-2);
+.dailyFactorsSummary h2 {
+  font-size: var(--font-size-md);
+  line-height: 1.25;
+}
+
+.dailyFactorsDetails {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.dailyFactorsDetails p {
   color: var(--color-text-muted);
   font-size: var(--font-size-sm);
   line-height: 1.5;
@@ -351,6 +367,8 @@
 
   .dailyFactors {
     grid-template-columns: 1fr;
+    align-items: stretch;
+    gap: var(--space-4);
   }
 
   .progressCard > :last-child {
