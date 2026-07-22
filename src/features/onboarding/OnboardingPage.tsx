@@ -74,7 +74,7 @@ export function OnboardingPage({ settings }: { settings: Settings }) {
     <main className={styles.page}>
       <div className={styles.brand}>
         <span aria-hidden="true">
-          <img alt="" src={`${import.meta.env.BASE_URL}icon-192.png`} />
+          <img alt="" src={`${import.meta.env.BASE_URL}header-icon.png`} />
         </span>
         <strong>Oasis — Water Tracker</strong>
       </div>
